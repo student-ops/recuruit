@@ -16,3 +16,26 @@ html
 						Ι―[recuruit(データ引き出し)]
 						Ι
 						Ι―[create_recuruit(データ挿入)]
+
+### DB
+
+user table
+|colum | datail |
+| ----- | -----|
+|user id | Primary key|
+|user name| |
+|pass word | |
+|date created | |
+|date updated| |
+|date deleted | |
+
+authorization
+
+|colum | datail |
+| ----- | -----|
+|user id | |
+|login id | autoinclement, Primarykey|
+|user name| ||
+|date created | |
+|date updated| |
+
