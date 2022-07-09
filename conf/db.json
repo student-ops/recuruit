@@ -1,0 +1,8 @@
+{
+    "host": "localhost",
+    "port": 3306,
+    "db-name": "db1",
+    "charset": "utf8",
+    "user": "lakky1",
+    "pass": "lakky1"
+}
