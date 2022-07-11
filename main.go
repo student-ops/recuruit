@@ -10,7 +10,6 @@ import (
 	*/
 	"fmt"
 	"net/http"
-	"test/req_handler"
 )
 
 func main() {
