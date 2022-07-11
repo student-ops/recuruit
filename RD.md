@@ -40,3 +40,5 @@ authorization
 |date created | |
 |date updated| |
 
+memo
+
