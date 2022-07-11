@@ -22,12 +22,13 @@ html
 user table
 |colum | datail |
 | ----- | -----|
-|user id | Primary key|
-|user name| |
-|pass word | |
-|date created | |
-|date updated| |
-|date deleted | |
+|user id | varchar*50)|
+|pass word | varchar*50)|
+|date created |date time |
+|date updated| date time|
+|date deleted | date time|
+mysql
+create table 
 
 authorization
 
