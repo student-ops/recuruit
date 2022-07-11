@@ -13,9 +13,12 @@ func HandlerUserConfirm(w http.ResponseWriter, req *http.Request) {
  
     // テンプレートに出力する値をマップにセット
     values := map[string]string{
-        "account": req.FormValue("account"),
-        "name":    req.FormValue("name"),
-        "passwd":  req.FormValue("passwd"),
+        "account":     req.FormValue("account"),
+        "name":        req.FormValue("name"),
+        "passwd":      req.FormValue("passwd"),
+        "hid_account": req.FormValue("account"),
+        "hid_name":    req.FormValue("name"),
+        "hid_passwd":  req.FormValue("passwd"),
     }
  
     // マップを展開してテンプレートを出力する
