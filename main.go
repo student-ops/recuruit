@@ -14,7 +14,7 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/static", req_handler.topHandler)
+	mux.HandleFunc("/static",tophandler.topHandler)
 
 	// サーバーの定義と呼び出し
 	server := &http.Server{
