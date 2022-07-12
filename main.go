@@ -9,12 +9,12 @@ import (
 		_ "github.com/go-sql-driver/mysql"
 	*/
 	"net/http"
-	"test/tophandle"
+	"test/req_handler"
 )
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/static", tophandle.topHandler)
+	mux.HandleFunc("/static", req_handler.topHandler)
 
 	// サーバーの定義と呼び出し
 	server := &http.Server{
