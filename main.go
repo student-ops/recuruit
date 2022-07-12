@@ -13,6 +13,7 @@ import (
 	"test/req_handler"
 )
 func main() {
+	mux := http.NwewServeMux()
 	http.HandleFunc("/", req_handler.tophandle)
 	http.ListenAndServe(":8080", nil)
 	fmt.Println("hello world")
