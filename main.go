@@ -8,13 +8,18 @@ import (
 		"database/sql"
 		_ "github.com/go-sql-driver/mysql"
 	*/
-	"fmt"
 	"net/http"
-	"test/req_handler"
+	"test/tophandle"
 )
+
 func main() {
-	mux := http.NwewServeMux()
-	http.HandleFunc("/", req_handler.tophandle)
-	http.ListenAndServe(":8080", nil)
-	fmt.Println("hello world")
+	mux := http.NewServeMux()
+	mux.HandleFunc("/static", tophandle.topHandler)
+
+	// サーバーの定義と呼び出し
+	server := &http.Server{
+		Addr: "0.0.0.0.:8080",
+		Handler:mux,
+	}
+	server.ListenAndServe()
 }

@@ -1,7 +1,15 @@
 package req_handler
-import(
+
+import (
 	"net/http"
+	"text/template"
 )
-func TopHnadle(){
-	
+func topHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("top.html")
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := t.Execute(w, nil); err != nil {
+		panic(err.Error())
+	}
 }
