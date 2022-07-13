@@ -2,6 +2,7 @@ package req_handle
 
 import (
 	"net/http"
+	"test/query"
 	"text/template"
 )
 func Top(w http.ResponseWriter, r *http.Request) {
@@ -30,4 +31,5 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
 	}
+	query.Init()
 }
