@@ -1,10 +1,10 @@
 package conf // 独自の設定ファイルパッケージ
- 
+
 import (
-    "encoding/json"
-    "io/ioutil"
+	"encoding/json"
+	"io/ioutil"
 )
- 
+
 // DB設定の構造体
 type ConfDB struct {
     Host   string `json:"host"`    // ホスト名
