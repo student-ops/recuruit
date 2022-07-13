@@ -23,7 +23,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func Login(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("html/CreateAccount.html")
+	t, err := template.ParseFiles("html/login.html")
 	if err != nil {
 		panic(err.Error())
 	}
