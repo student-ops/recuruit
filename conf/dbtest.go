@@ -4,5 +4,5 @@ import (
 	"test/query"
 )
 func main(){
-	query.Init();
+	query.CheckUser(13,"hapi")
 }

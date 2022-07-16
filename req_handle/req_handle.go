@@ -35,7 +35,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 func UserConfirm(w http.ResponseWriter, r *http.Request){
 	if tpl_handle.UserValues == nil{
-	tpl_handle.UserValues = make(map[string]string)
+		tpl_handle.UserValues = make(map[string]string)
 	}
 	tpl_handle.UserValues["user_id"] = r.FormValue("user_id")
 	tpl_handle.UserValues["pass_word"] = r.FormValue("pass_word")
