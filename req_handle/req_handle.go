@@ -1,9 +1,9 @@
 package req_handle
 
 import (
+	"fmt"
 	"net/http"
 	"test/query"
-	"test/tpl_handle"
 	"text/template"
 )
 
@@ -34,12 +34,10 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserConfirm(w http.ResponseWriter, r *http.Request){
-	if tpl_handle.UserValues == nil{
-		tpl_handle.UserValues = make(map[string]string)
-	}
-	tpl_handle.UserValues["user_id"] = r.FormValue("user_id")
-	tpl_handle.UserValues["pass_word"] = r.FormValue("pass_word")
-	query.Init()
+	uservlues := query.UserValues{}
+	uservlues.Userid = r.FormValue("user_id")
+	uservlues.Password= r.FormValue("pass_word")
+	uservlues.Register()
 }
 
 
@@ -51,4 +49,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
 	}
+	uservlues := query.UserValues{}
+	uservlues.Userid = r.FormValue("user_id")
+	fmt.Println(uservlues)
+
 }

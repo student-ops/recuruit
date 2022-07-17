@@ -2,49 +2,43 @@ package query
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
-	"test/tpl_handle"
 
 	_ "github.com/lib/pq"
 )
-var Db *sql.DB
-func Init() {
-	var err error
-	var UserValues map[string]string
-	if tpl_handle.UserValues == nil{
-		tpl_handle.UserValues = make(map[string]string)
-	}
-	UserValues = tpl_handle.UserValues
-	DbConection()
-	fmt.Println(UserValues)
-	sql_statement := "INSERT INTO test(name)values($1);"
-	_, err = Db.Exec(sql_statement,UserValues["user_id"]);
-	if err != nil{
-		panic(err)
-	}
+type UserValues struct{
+	Userid string
+	Password string
+	Created string
 }
+var Db *sql.DB
 func DbConection(){
 	var err error
 	Db, err = sql.Open("postgres", "user=recuruit dbname=recuruit password=recuruit sslmode=disable")
 	if err != nil {
 			panic(err)
 	}
-	fmt.Println("接続成功")
+	fmt.Println("connected")
 }
-func CheckUser(id int,pass string)(bool){
+func (user *UserValues)Register() {
+	var err error
 	DbConection()
-	sql_statement:= "SELECT id FROM test WHERE id = $1 and name = $2"
-	rows, err := Db.Exec(sql_statement,id,pass)
+	sql_statement := "INSERT INTO UserValues(userid,password,created)values($1,$2,now());"
+	_, err = Db.Exec(sql_statement,user.Userid,user.Password);
 	if err != nil{
 		panic(err)
 	}
-	fmt.Println(rows)
-	if rows == nil {
-		err := errors.New("UserIdが存在しません。")
-		fmt.Println(err)
-		return false
+}
+
+func CheckUser(userid string)(user UserValues,err error){
+	user = UserValues{}
+	DbConection()
+
+	sql_statement:= "SELECT userid, password, created FROM UserValues WHERE userid = $1"
+	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
+
+	if err != nil{
+		fmt.Println("userid not exist")
 	}
-	fmt.Println("hit!!")
-	return true
+	return
 }
