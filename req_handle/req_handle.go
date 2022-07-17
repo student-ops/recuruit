@@ -6,7 +6,6 @@ import (
 	"test/query"
 	"text/template"
 )
-
 /*
 var FormValue map[string]string = map[string]string{
 	"user_id": "",
@@ -49,8 +48,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
 	}
+}
+func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	uservlues := query.UserValues{}
-	uservlues.Userid = r.FormValue("user_id")
+	uservlues.Userid = r.FormValue("userid")
 	fmt.Println(uservlues)
-
+	ans ,_ := query.CheckUser(uservlues.Userid)
+	fmt.Println(ans)
 }
