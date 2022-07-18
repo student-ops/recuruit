@@ -37,8 +37,6 @@ func UserConfirm(w http.ResponseWriter, r *http.Request){
 	uservlues.Password= r.FormValue("pass_word")
 	uservlues.Register()
 }
-
-
 func Login(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("html/login.html")
 	if err != nil {
@@ -55,5 +53,5 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	ans ,_ := query.CheckUser(uservlues.Userid)
 	fmt.Println(ans)
 	t, _ := template.ParseFiles("html/top_after.html")
-	t.Execute(w, "Hello World!")
+	t.Execute(w, ans)
 }
