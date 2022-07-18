@@ -6,6 +6,7 @@ import (
 	"test/query"
 	"text/template"
 )
+
 /*
 var FormValue map[string]string = map[string]string{
 	"user_id": "",
@@ -53,4 +54,6 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	fmt.Println(uservlues)
 	ans ,_ := query.CheckUser(uservlues.Userid)
 	fmt.Println(ans)
+	t, _ := template.ParseFiles("html/top_after.html")
+	t.Execute(w, "Hello World!")
 }
