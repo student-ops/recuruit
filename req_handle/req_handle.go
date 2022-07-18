@@ -50,8 +50,13 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	uservlues := query.UserValues{}
 	uservlues.Userid = r.FormValue("userid")
 	fmt.Println(uservlues)
-	ans ,_ := query.CheckUser(uservlues.Userid)
+	ans := query.UserValues{
+
+	}
+	ans ,_ = query.CheckUser(uservlues.Userid)
 	fmt.Println(ans)
-	t, _ := template.ParseFiles("html/top_after.html")
-	t.Execute(w, ans)
+	if ans.Userid  != ""{
+		t, _ := template.ParseFiles("html/top_after.html")
+		t.Execute(w, ans)
+	}
 }

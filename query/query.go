@@ -33,12 +33,7 @@ func (user *UserValues)Register() {
 func CheckUser(userid string)(user UserValues,err error){
 	user = UserValues{}
 	DbConection()
-
 	sql_statement:= "SELECT userid, password, created FROM UserValues WHERE userid = $1"
 	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
-
-	if err != nil{
-		fmt.Println("userid not exist")
-	}
 	return
 }
