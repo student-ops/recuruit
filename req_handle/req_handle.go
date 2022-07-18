@@ -29,9 +29,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
 	}
-
 }
-
 func UserConfirm(w http.ResponseWriter, r *http.Request){
 	uservlues := query.UserValues{}
 	uservlues.Userid = r.FormValue("user_id")
