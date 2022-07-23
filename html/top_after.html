@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <header class="page_header">
     <div class="header_content">
         <a href="top.html">ログアウトする</a>
@@ -12,6 +12,15 @@
 </header>
 <body>
     <h1>top_after</h1>
-    <h2>{{.}}さんこんにちは</h2>
+    <p>{{.}}</p><!-- *配列* -->
+    {{with ""}}
+        <p>名前が取得されません。</p>
+    {{else}}
+        <p>{{.}}さんこんにちは</p>
+    {{end}}
+    <hr>
+    {{template "post.html"}}
+    <hr>
+    <p>includeの後</p>
 </body>
 </html>

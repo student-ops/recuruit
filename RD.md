@@ -40,5 +40,17 @@ authorization
 |date created | |
 |date updated| |
 
+
+post
+|colum|type|
+|- |-|
+|title|varchar(50) primary|
+|datacreated| varchar(50) primary|
+|lang|int|
+|detail|varchar(300)|
+
+
+
+
 memo
 
