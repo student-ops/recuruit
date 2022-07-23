@@ -49,14 +49,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	uservlues := query.UserValues{}
 	uservlues.Userid = r.FormValue("userid")
-	fmt.Println(uservlues)
-	ans := query.UserValues{
-
-	}
+	ans := query.UserValues{}
 	ans ,_ = query.CheckUser(uservlues.Userid)
 	fmt.Println(ans)
 	if ans.Userid  != ""{
+
 		t, _ := template.ParseFiles("html/top_after.html","html/post.html")
-		t.Execute(w, ans)
+		t.Execute(w, ans.Userid)
 	}
+}
+func Post(w http.ResponseWriter,R *http.Request){
+	threds := query.
 }

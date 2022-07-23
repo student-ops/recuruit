@@ -11,6 +11,13 @@ type UserValues struct{
 	Password string
 	Created string
 }
+type Threads struct{
+	Title string
+	Userid string
+    Datecreated string
+    Lang string
+    Detail string
+}
 var Db *sql.DB
 func DbConection(){
 	var err error
@@ -36,4 +43,13 @@ func CheckUser(userid string)(user UserValues,err error){
 	sql_statement:= "SELECT userid, password, created FROM UserValues WHERE userid = $1"
 	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
 	return
+}
+func CheckThreads()(threads Threads,err error){
+	threads = Threads{}
+	DbConection()
+	sql_statement:="SElECT * from threads"
+	err = Db.Query(sql_statement).Scan(&threads.Title,&threads.Userid,&threads.Datecreated,&threads.Lang,&threads.Detail);
+	fmt.Println(threads)
+	return
+
 }
