@@ -44,12 +44,15 @@ func CheckUser(userid string)(user UserValues,err error){
 	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
 	return
 }
-func CheckThreads()(threads Threads,err error){
-	threads = Threads{}
+func CheckThreads()(threads []Threads,err error){
 	DbConection()
-	sql_statement:="SElECT * from threads"
-	err = Db.Query(sql_statement).Scan(&threads.Title,&threads.Userid,&threads.Datecreated,&threads.Lang,&threads.Detail);
+	rows,err :=Db.Query("SElECT * from threads")
+	if err !=nil{return}
+	for rows.Next(){
+		th :=Threads{}
+		if err = rows.Scan(&th.Title,&th.Userid,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
+		threads = append(threads, th)
+	}
 	fmt.Println(threads)
 	return
-
 }

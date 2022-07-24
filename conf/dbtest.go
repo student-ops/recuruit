@@ -3,6 +3,12 @@ package main
 import (
 	"test/query"
 )
-func main(){
+type Thread struct{
+	name string
+	age int
+	mon int
+}
+func main() {
 	query.CheckThreads()
 }
+

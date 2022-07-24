@@ -1,3 +1,4 @@
+{{define "top_after"}}
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,9 +18,6 @@
     {{else}}
         <p>{{.}}さんこんにちは</p>
     {{end}}
-    <hr>
-    {{template "post.html"}}
-    <hr>
-    <p>includeの後</p>
 </body>
 </html>
+{{end}}

@@ -47,17 +47,26 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
-	uservlues := query.UserValues{}
-	uservlues.Userid = r.FormValue("userid")
+	Userid := r.FormValue("userid")
 	ans := query.UserValues{}
-	ans ,_ = query.CheckUser(uservlues.Userid)
+	ans ,_ = query.CheckUser(Userid)
 	fmt.Println(ans)
+	threads := []query.Threads{}
+	threads,_ = query.CheckThreads();
 	if ans.Userid  != ""{
-
 		t, _ := template.ParseFiles("html/top_after.html","html/post.html")
-		t.Execute(w, ans.Userid)
+		err := t.ExecuteTemplate(w,"top_after",ans.Userid);if err != nil{panic(err)}
+		t.ExecuteTemplate(w,"post", threads)
 	}
 }
-func Post(w http.ResponseWriter,R *http.Request){
-	threds := query.
+func Posts(w http.ResponseWriter, r *http.Request){
+	threads := []query.Threads{}
+	threads,_ = query.CheckThreads();
+	t, err := template.ParseFiles("html/post.html")
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := t.Execute(w, threads,); err != nil {
+		panic(err.Error())
+	}
 }
