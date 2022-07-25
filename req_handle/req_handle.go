@@ -48,6 +48,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	Userid := r.FormValue("userid")
+	if Userid == ""{
+		Userid = " 	"
+	}
+	fmt.Println(Userid)
 	ans := query.UserValues{}
 	ans ,_ = query.CheckUser(Userid)
 	fmt.Println(ans)
@@ -56,17 +60,39 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	if ans.Userid  != ""{
 		t, _ := template.ParseFiles("html/top_after.html","html/post.html")
 		err := t.ExecuteTemplate(w,"top_after",ans.Userid);if err != nil{panic(err)}
-		t.ExecuteTemplate(w,"post", threads)
+		t.ExecuteTemplate(w,"post", threads) //別関数にuser idを引数に追加する。
+	}else{
+		//リクエスト流す。
 	}
 }
-func Posts(w http.ResponseWriter, r *http.Request){
-	threads := []query.Threads{}
-	threads,_ = query.CheckThreads();
-	t, err := template.ParseFiles("html/post.html")
+func CreateProject(w http.ResponseWriter,R *http.Request){
+	t, err := template.ParseFiles("html/create_project.html")
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.Execute(w, threads,); err != nil {
+	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
 	}
 }
+func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
+	return func(w http.ResponseWriter,r *http.Request){
+		thread := query.Threads{}
+		thread.Title = r.FormValue("title")
+		thread.Detail = r.FormValue("datail")
+		thread.Lang = r.FormValue("lang")
+		fmt.Println(thread)
+		query.ThreadAdd(thread)
+		h(w,r)
+	}
+}
+//func Posts(w http.ResponseWriter, r *http.Request){
+	//threads := []query.Threads{}
+	//threads,_ = query.CheckThreads();
+	//t, err := template.ParseFiles("html/post.html")
+	//if err != nil {
+	//	panic(err.Error())
+	//}
+	//if err := t.Execute(w, threads,); err != nil {
+	//	panic(err.Error())
+	//}
+//}

@@ -18,6 +18,7 @@ type Threads struct{
     Lang string
     Detail string
 }
+
 var Db *sql.DB
 func DbConection(){
 	var err error
@@ -27,6 +28,7 @@ func DbConection(){
 	}
 	fmt.Println("connected")
 }
+
 func (user *UserValues)Register() {
 	var err error
 	DbConection()
@@ -44,6 +46,7 @@ func CheckUser(userid string)(user UserValues,err error){
 	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
 	return
 }
+
 func CheckThreads()(threads []Threads,err error){
 	DbConection()
 	rows,err :=Db.Query("SElECT * from threads")
@@ -54,5 +57,17 @@ func CheckThreads()(threads []Threads,err error){
 		threads = append(threads, th)
 	}
 	fmt.Println(threads)
+	return
+}
+
+func ThreadAdd(thread Threads){
+	thread.Userid = "hurry"
+	fmt.Println(thread)
+	var err error
+	sql_statement := "INSERT INTO threads(title,userid,datecreated,lang,detail)values($1,$2,now(),$3,$4);"
+	_ , err = Db.Exec(sql_statement, thread.Title,thread.Userid,thread.Lang,thread.Detail);
+	if err != nil {
+		panic(err)
+	}
 	return
 }

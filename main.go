@@ -18,7 +18,8 @@ func main() {
 	mux.HandleFunc("/login",req_handle.Login)
 	mux.HandleFunc("/user_confirm",req_handle.UserConfirm)
 	mux.HandleFunc("/login_confirm",req_handle.LoginConfirm)
-	mux.HandleFunc("/posts",req_handle.Posts)
+	mux.HandleFunc("/create_project",req_handle.CreateProject)
+	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: "0.0.0.0:8080",
