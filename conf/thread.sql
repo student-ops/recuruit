@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS threads;
 CREATE TABLE IF NOT EXISTS threads(
     title varchar(50),
     userid varchar(50),
