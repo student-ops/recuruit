@@ -1,0 +1,15 @@
+{{define "post"}}
+    {{range.}}
+    <div class="thread">
+        <div class="panel-heading">
+            <h2>{{.Title}}</h2>
+        </div>
+        <div class="panel-body">
+            <p>{{.Userid}}</p>
+            <p>{{.Datecreated}}</p>
+            <p>{{.Lang}}</p>
+            <p>{{.Detail}}</p>
+        </div>
+    </div>
+    {{end}}
+{{end}}

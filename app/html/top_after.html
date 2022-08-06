@@ -1,0 +1,22 @@
+{{define "top_after"}}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<header class="page_header">
+    <div class="header_content">
+        <a href="top.html">ログアウトする</a>
+        <a href="my_page.html">マイページ</a>
+        <a href="create_project">ページを作成する</a>
+    </div>
+</header>
+<body>
+    <h1>top_after</h1>
+    {{with ""}}
+        <p>名前が取得されません。</p>
+    {{else}}
+        <p>{{.}}さんこんにちは</p>
+    {{end}}
+</body>
+</html>
+{{end}}
