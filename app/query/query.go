@@ -3,6 +3,7 @@ package query
 import (
 	"database/sql"
 	"fmt"
+	"test/util"
 
 	_ "github.com/lib/pq"
 )
@@ -30,10 +31,12 @@ func DbConection(){
 }
 
 func (user *UserValues)Register() {
+	//user.Password = data.Encrypt
 	var err error
 	DbConection()
+	encpath := util.Encrypt(user.Password)
 	sql_statement := "INSERT INTO UserValues(userid,password,created)values($1,$2,now());"
-	_, err = Db.Exec(sql_statement,user.Userid,user.Password);
+	_, err = Db.Exec(sql_statement,user.Userid,encpath);
 	if err != nil{
 		panic(err)
 	}
