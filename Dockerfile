@@ -1,5 +1,3 @@
-FROM golang:1.16-alpine
-WORKDIR /app
-COPY app/. .
-RUN go mod download
-EXPOSE 80
+FROM nginx
+COPY ./app/html/. /usr/share/nginx/html
+COPY ./nginx/nginx.conf  /etc/nginx/nginx.conf
