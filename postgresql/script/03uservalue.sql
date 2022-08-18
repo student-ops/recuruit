@@ -1,9 +1,12 @@
 \c recuruit
-CREATE TABLE  if not exists recuruitschema.UserValues(
+-- UserValuesからuservaluesに変更
+CREATE TABLE if not exists recuruitschema.uservalues(
     userid varchar(50),
     password varchar(50),
     created timestamp
 );
-GRANT ALL PRIVILEGES ON recuruitschema.UserValues TO recuruit;
-insert into uservalues values('fefefe','fefefe',now());
-insert into uservalues values('moh','salah',now());
+-- UserValuesからuservaluesに変更
+GRANT ALL PRIVILEGES ON recuruitschema.uservalues TO recuruit;
+-- schema名が必要
+insert into recuruitschema.uservalues values('fefefe','fefefe',now());
+insert into recuruitschema.uservalues values('moh','salah',now());

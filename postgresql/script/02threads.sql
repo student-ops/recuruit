@@ -9,14 +9,15 @@ CREATE TABLE IF NOT EXISTS recuruitschema.threads(
     PRIMARY KEY (title,datecreated)
 );
 GRANT ALL PRIVILEGES ON recuruitschema.threads TO recuruit;
-INSERT INTO threads values(
+-- insertのところにもschema名を付ける必要がある
+INSERT INTO recuruitschema.threads values(
     'first thread',
     'fefe',
     now(),
     1,
     'golang develop ment!'
 );
-INSERT INTO threads values(
+INSERT INTO recuruitschema.threads values(
     'js dev',
     'rakky',
     now(),
