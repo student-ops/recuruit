@@ -22,7 +22,7 @@ func main() {
 	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
 	// サーバーの定義と呼び出し
 	server := &http.Server{
-		Addr: ":80",
+		Addr: "localhost:8080",
 		Handler:mux,
 	}
 	server.ListenAndServe()
