@@ -41,16 +41,26 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 }
-UserConfirm(w http.ResponseWriter, r *http.Request) {
-	
+
+func UserConfirm(w http.ResponseWriter, r *http.Request) {
+	t,err := template.ParseFiles("html/create_account_confirm.html")
+	values := map[string]string{
+		"user_id": r.FormValue("user_id"),
+		"pass_ward": r.FormValue("pass_ward"),
+		"hid_userid": r.FormValue("user_id"),
+		"hid_passward": r.FormValue("pass_ward"),
+	}
+	if err != nil{
+	t.ExecuteTemplate(w,"create_account_confirm.html",values)
+	}
 }
 
 //create htmlから受け取ってquery.registerに
 func UserRegister(h http.HandlerFunc)http.HandlerFunc{
-	return func (w http.ResponseWriter, r *http.Request){
+	return func (w http.ResponseWriter, r *http.Request,){
 		uservalues := query.UserValues{}
-		uservalues.Userid = r.FormValue("user_id")
-		uservalues.Password= r.FormValue("pass_word")
+		uservalues.Userid = r.FormValue("hid_userid")
+		uservalues.Password= r.FormValue("hid_passward")
 		query.Register(uservalues)
 		h(w,r)
 	}
