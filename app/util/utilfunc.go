@@ -5,6 +5,7 @@ import (
     "crypto/cipher"
     "fmt"
     "os"
+    "net/http"
 )
 
 var commonIV = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
@@ -39,4 +40,13 @@ func Encrypt(input string)(output string) {
     // 復号文字列
     output = string(ciphertext)
     return output
+}
+func CheckCookie(w http.ResponseWriter,r *http.Request) string{
+    c, err := r.Cookie("user_authentication")
+    if err != nil{
+        return "";
+    }
+    fmt.Println(c.Value)
+    userid := c.Value
+    return userid
 }

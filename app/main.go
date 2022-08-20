@@ -16,7 +16,7 @@ func main() {
 	mux.HandleFunc("/",req_handle.Top)
 	mux.HandleFunc("/create_account",req_handle.CreateAccount)
 	mux.HandleFunc("/login",req_handle.Login)
-	mux.HandleFunc("/user_confirm",req_handle.UserConfirm)
+	mux.HandleFunc("/user_confirm",req_handle.UserRegister(req_handle.Top))
 	mux.HandleFunc("/login_confirm",req_handle.LoginConfirm)
 	mux.HandleFunc("/create_project",req_handle.CreateProject)
 	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))

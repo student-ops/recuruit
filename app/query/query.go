@@ -3,8 +3,6 @@ package query
 import (
 	"database/sql"
 	"fmt"
-	"test/util"
-
 	_ "github.com/lib/pq"
 )
 type UserValues struct{
@@ -30,13 +28,12 @@ func DbConection(){
 	fmt.Println("connected")
 }
 
-func (user *UserValues)Register() {
+func Register(user UserValues){
 	//user.Password = data.Encrypt
 	var err error
 	DbConection()
-	encpath := util.Encrypt(user.Password)
 	sql_statement := "INSERT INTO UserValues(userid,password,created)values($1,$2,now());"
-	_, err = Db.Exec(sql_statement,user.Userid,encpath);
+	_, err = Db.Exec(sql_statement,user.Userid,user.Password);
 	if err != nil{
 		panic(err)
 	}
@@ -59,13 +56,10 @@ func CheckThreads()(threads []Threads,err error){
 		if err = rows.Scan(&th.Title,&th.Userid,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
 		threads = append(threads, th)
 	}
-	fmt.Println(threads)
 	return
 }
 
 func ThreadAdd(thread Threads){
-	thread.Userid = "hurry"
-	fmt.Println(thread)
 	var err error
 	sql_statement := "INSERT INTO threads(title,userid,datecreated,lang,detail)values($1,$2,now(),$3,$4);"
 	_ , err = Db.Exec(sql_statement, thread.Title,thread.Userid,thread.Lang,thread.Detail);
