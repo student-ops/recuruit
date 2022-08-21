@@ -50,12 +50,11 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/create_account_confirm.html")
 	values := map[string]string{
 		"user_id": r.FormValue("user_id"),
-		"pass_ward": r.FormValue("pass_ward"),
+		"pass_word": r.FormValue("pass_word"),
 		"hid_userid": r.FormValue("user_id"),
-		"hid_passward": r.FormValue("pass_ward"),
+		"hid_password": r.FormValue("pass_word"),
 	}
-	fmt.Println("parsed")
-		fmt.Println("arrival user confirm")
+	fmt.Println(values)
 	t.ExecuteTemplate(w,"create_account_confirm",values)
 }
 
@@ -64,7 +63,7 @@ func UserRegister(h http.HandlerFunc)http.HandlerFunc{
 	return func (w http.ResponseWriter, r *http.Request,){
 		uservalues := query.UserValues{}
 		uservalues.Userid = r.FormValue("hid_userid")
-		uservalues.Password= r.FormValue("hid_passward")
+		uservalues.Password= r.FormValue("hid_password")
 		query.Register(uservalues)
 		h(w,r)
 	}
