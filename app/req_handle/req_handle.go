@@ -15,10 +15,10 @@ var FormValue map[string]string = map[string]string{
 }
 */
 func Top(w http.ResponseWriter, r *http.Request) {
-
 	if userid := util.CheckCookie(w,r); userid != ""{
-		threads := []query.Threads{}
-		threads,_ = query.CheckThreads();
+		fmt.Println(userid)
+		threads := []query.THredsVuewer{}
+		threads,_ = query.CheckAllThreads();
 		t, _ := template.ParseFiles("html/top_after.html","html/posts.html")
 		err := t.ExecuteTemplate(w,"top_after",userid);if err != nil{panic(err)}
 		t.ExecuteTemplate(w,"posts", threads) //別関数にuser idを引数に追加する。
@@ -55,7 +55,7 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 		"hid_password": r.FormValue("pass_word"),
 	}
 	fmt.Println(values)
-	t.ExecuteTemplate(w,"create_account_confirm",values)
+	t.ExecuteTemplate(w,"create_account_confirm.html",values)
 }
 
 //create htmlから受け取ってquery.registerに
@@ -80,12 +80,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	Userid := r.FormValue("userid")
-	if Userid == ""{
-		Userid = ""
-	}
 	fmt.Println(Userid)
 	ans := query.UserValues{}
-	ans ,_ = query.CheckUser(Userid)
+	ans ,err := query.CheckUser(Userid)
+	if err != nil{
+		fmt.Printf("ログインに失敗しました。")
+	}
 	if ans.Userid  != ""{
 		authentication := http.Cookie{
 			Name: "user_authentication",
@@ -95,13 +95,9 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 		http.SetCookie(w,&authentication)
 		http.Redirect(w,r,"/",302)
 	}else{
-		t, err := template.ParseFiles("html/top.html")
-		if err != nil {
-			panic(err.Error())
-		}
-		if err := t.Execute(w, nil); err != nil {
-			panic(err.Error())
-		}
+		t, _ := template.ParseFiles("html/error.html")
+		error_massage := "UserIdまたはパスワードが異なります。"
+		t.ExecuteTemplate(w,"error.html",error_massage)
 	}
 }
 func CreateProject(w http.ResponseWriter,R *http.Request){
@@ -116,6 +112,7 @@ func CreateProject(w http.ResponseWriter,R *http.Request){
 func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 	return func(w http.ResponseWriter,r *http.Request){
 		thread := query.Threads{}
+		thread.Userid =	util.CheckCookie(w,r);
 		thread.Title = r.FormValue("title")
 		thread.Detail = r.FormValue("datail")
 		thread.Lang = r.FormValue("lang")
@@ -124,9 +121,26 @@ func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 		h(w,r)
 	}
 }
+func VueThread(w http.ResponseWriter,r *http.Request){
+	thread_userid := r.FormValue("hid_userid")
+	thread_title := r.FormValue("hid_title")
+	thread_date_created := r.FormValue("hid_date_created")
+	fmt.Println("print thread_userid: bottom")
+	fmt.Println(thread_userid)
+	thread := query.Threads{}
+	thread,_ = query.CheckThread(thread_userid,thread_title,thread_date_created);
+	t,err := template.ParseFiles("html/thread.html")
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := t.ExecuteTemplate(w, "thread.html",thread); err != nil {
+		panic(err.Error())
+	}
+}
+
 //func Posts(w http.ResponseWriter, r *http.Request){
 	//threads := []query.Threads{}
-	//threads,_ = query.CheckThreads();
+	//threads,_ = query.CheckAllThreads();
 	//t, err := template.ParseFiles("html/post.html")
 	//if err != nil {
 	//	panic(err.Error())

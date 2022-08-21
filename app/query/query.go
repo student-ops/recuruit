@@ -17,6 +17,16 @@ type Threads struct{
     Lang string
     Detail string
 }
+type THredsVuewer struct{
+	Title string
+	Userid string
+    Datecreated string
+    Lang string
+    Detail string
+	HidUserid string
+	HidTitle string
+	HidDateCreated string
+}
 
 var Db *sql.DB
 func DbConection(){
@@ -25,7 +35,6 @@ func DbConection(){
 	if err != nil {
 			panic(err)
 	}
-	fmt.Println("connected")
 }
 
 func Register(user UserValues){
@@ -47,18 +56,32 @@ func CheckUser(userid string)(user UserValues,err error){
 	return
 }
 
-func CheckThreads()(threads []Threads,err error){
+func CheckAllThreads()(threads []THredsVuewer,err error){
 	DbConection()
-	rows,err :=Db.Query("SElECT * from threads")
+	rows,err :=Db.Query("SElECT * from threads ORDER BY datecreated DESC")
 	if err !=nil{return}
 	for rows.Next(){
-		th :=Threads{}
+		th :=THredsVuewer{}
 		if err = rows.Scan(&th.Title,&th.Userid,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
+		th.HidUserid = th.Userid
+		th.HidTitle = th.Title
+		th.HidDateCreated = th.Datecreated
 		threads = append(threads, th)
+		fmt.Println(th)
 	}
 	return
 }
-
+func CheckThread(userid string,title string,datecreated string) (thread Threads,err error){
+	fmt.Println("arrival check thred")
+	fmt.Println(userid)
+	fmt.Println(title)
+	fmt.Println(datecreated)
+	DbConection()
+	thread = Threads{}
+	rows := "SELECT title,userid,datecreated,lang,detail from threads WHERE userid = $1"
+	err = Db.QueryRow(rows,userid).Scan(&thread.Title,&thread.Userid,&thread.Datecreated,&thread.Lang,&thread.Detail)
+	return
+}
 func ThreadAdd(thread Threads){
 	var err error
 	sql_statement := "INSERT INTO threads(title,userid,datecreated,lang,detail)values($1,$2,now(),$3,$4);"

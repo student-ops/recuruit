@@ -21,6 +21,7 @@ func main() {
 	mux.HandleFunc("/login_confirm",req_handle.LoginConfirm)
 	mux.HandleFunc("/create_project",req_handle.CreateProject)
 	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
+	mux.HandleFunc("/vue_thread",req_handle.VueThread)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: "localhost:8080",

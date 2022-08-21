@@ -1,15 +1,29 @@
 {{define "posts"}}
+<div class="threds">
     {{range.}}
     <div class="thread">
-        <div class="panel-heading">
-            <h2>{{.Title}}</h2>
-        </div>
-        <div class="panel-body">
-            <p>{{.Userid}}</p>
-            <p>{{.Datecreated}}</p>
-            <p>{{.Lang}}</p>
-            <p>{{.Detail}}</p>
-        </div>
+        <form action="vue_thread" method="post">
+            <tr>
+                <td>{{.Title}}</td>
+            </tr>
+            <tr>
+                <td>{{.Userid}}</td>
+            </tr>
+            <tr>
+                <td>{{.Datecreated}}</td>
+            </tr>
+            <tr>
+                <td>{{.Lang}}</td>
+            </tr>
+            <tr>
+                <td>{{.Detail}}</td>
+            </tr>
+            <input type="hidden" name = "hid_userid" value="{{.HidUserid}}">
+            <input type="hidden" name = "hid_title" value="{{.HidTitle}}">
+            <input type="hidden" name = "hid_date_created" value="{{.HidDateCreated}}">
+            <input type="submit" value="投稿をみる">
+        </form>
     </div>
     {{end}}
+</div>
 {{end}}
