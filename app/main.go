@@ -14,6 +14,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/",req_handle.Top)
+	mux.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources/"))))
 	mux.HandleFunc("/create_account",req_handle.CreateAccount)
 	mux.HandleFunc("/login",req_handle.Login)
 	mux.HandleFunc("/user_confirm",req_handle.UserConfirm)
