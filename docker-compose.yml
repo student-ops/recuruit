@@ -12,16 +12,16 @@ services:
     environment:
       - POSTGRES_PASSWORD=passward
 
-  proxy:
+  nginx:
+    container_name: nginx
     build: ./nginx
     ports:
-      - 8080:80
+      - 80:80
     depends_on:
       - app
 
   app:
     build: ./app
-    tty: true
     ports:
       - 9000:9000
 

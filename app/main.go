@@ -25,7 +25,7 @@ func main() {
 	mux.HandleFunc("/vue_thread",req_handle.VueThread)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
-		Addr: "localhost:9000",
+		Addr: ":9000",
 		Handler:mux,
 	}
 	server.ListenAndServe()
