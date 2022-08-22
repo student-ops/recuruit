@@ -4,5 +4,5 @@ WORKDIR /app
 COPY . ./
 RUN go mod download
 RUN go build -o /app/main
-EXPOSE 80
+EXPOSE 9000
 CMD ["/app/main"]
