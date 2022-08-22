@@ -11,5 +11,19 @@ services:
       - ./postgresql/script:/docker-entrypoint-initdb.d # この行を追加しただけ
     environment:
       - POSTGRES_PASSWORD=passward
+
+  proxy:
+    build: ./nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - web
+
+  web:
+    build: .
+    tty: true
+    volumes:
+      - "./go:/app"
+
 volumes:
-  db-store:
+  -  db-store:
