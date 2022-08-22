@@ -19,7 +19,16 @@
                 <p>{{.Detail}}</p>
             </div>
         <div>
-        <button >add comment</button>
+        <form action="add_comment">
+            <table>
+                <input type="nidden" name="hid_thread_id" value = "{{.hid_thread_id}}">
+                <tr>
+                    <td>コメントを追加する</td>
+                    <td><input type="text" name="comment"></td>
+                </tr>
+            </table>
+            <input type="submit" value="コメントを追加する">
+        </form>
     </div>
 </body>
 </html>

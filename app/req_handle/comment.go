@@ -3,9 +3,9 @@ package req_handle
 import(
 	"net/http"
 	"fmt"
-	"text/template"
 )
 
-func AddCommnet(w http.ResponseWriter, r *http.Request){
-	
+func AddComment(w http.ResponseWriter, r *http.Request){
+	fmt.Println("hello")
+
 }
