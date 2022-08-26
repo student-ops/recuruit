@@ -16,12 +16,25 @@ var FormValue map[string]string = map[string]string{
 */
 func Top(w http.ResponseWriter, r *http.Request) {
 	if userid := util.CheckCookie(w,r); userid != ""{
-		fmt.Println(userid)
-		threads := []query.THredsVuewer{}
-		threads,_ = query.CheckAllThreads();
-		t, _ := template.ParseFiles("html/top_after.html","html/threads.html")
-		err := t.ExecuteTemplate(w,"top_after",userid);if err != nil{panic(err)}
-		t.ExecuteTemplate(w,"threads", threads) //別関数にuser idを引数に追加する。
+		threads,_ := query.CheckAllThreads();
+		type top_after_value struct{
+			Userid string
+			Threads  []query.ThreadsVuewer
+		}
+		Value := top_after_value{
+			Userid: userid,
+			Threads: threads,
+		}
+		t, _ := template.ParseFiles(
+		"html/top_after.gohtml",
+		"html/header.gohtml",
+		"html/threads.gohtml",
+		"html/footer.gohtml",
+		)
+		err := t.ExecuteTemplate(w,"top_after.gohtml",Value);if err != nil{
+			fmt.Println("error occured in top after")
+			panic(err)
+		}
 	}else{
 		t, err := template.ParseFiles("html/top.html")
 		if err != nil {
@@ -125,30 +138,26 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 	thread_userid := r.FormValue("hid_userid")
 	thread_title := r.FormValue("hid_title")
 	thread_date_created := r.FormValue("hid_date_created")
-	type thread_page struct{
-		Title string
-		Userid string
-		Datecreated string
-		Lang string
-		Detail string
-		HidThreadId string
+	type thread_value struct{
+		Thread query.Threads
+		HidUserid string
+		HidTitle string	
+		HidDateCreated string
 	}
 	q,_ := query.CheckThread(thread_userid,thread_title,thread_date_created);
 	//
-	thread_page_value := thread_page{
-		q.Title,
-		q.Userid,
-		q.Datecreated,
-		q.Lang,
-		q.Detail,
-		q.Userid,
+	thread_page_value := thread_value{
+		Thread: q,
+		HidUserid: q.Userid,
+		HidTitle: q.Title,
+		HidDateCreated: q.Datecreated,
 	}
 	fmt.Println(thread_page_value)
-	t,err := template.ParseFiles("html/thread.html")
+	t,err := template.ParseFiles("html/thread.gohtml","html/header.gohtml","html/thread_content.gohtml","html/footer.gohtml")
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.ExecuteTemplate(w, "thread.html",thread_page_value); err != nil {
+	if err := t.ExecuteTemplate(w, "thread.gohtml",thread_page_value); err != nil {
 		panic(err.Error())
 	}
 }

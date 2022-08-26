@@ -9,6 +9,7 @@ import (
 	*/
 	"net/http"
 	"test/req_handle"
+	"test/sample"
 )
 func main() {
 
@@ -23,6 +24,7 @@ func main() {
 	mux.HandleFunc("/create_project",req_handle.CreateProject)
 	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
 	mux.HandleFunc("/thread_page",req_handle.ThreadPage)
+	mux.HandleFunc("/test",sample.ThreadViwer)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: ":9000",

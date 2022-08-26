@@ -1,0 +1,12 @@
+{{template "header"}}
+<body>
+    {{with ""}}
+        <p>名前が取得されません。</p>
+    {{else}}
+        <p>{{.Userid}}さんこんにちは</p>
+    {{end}}
+        <h1>スレッド一覧</h1>
+    {{template "threads" .Threads}}
+</body>
+</html>
+{{template "footer"}}

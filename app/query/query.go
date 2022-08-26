@@ -18,7 +18,7 @@ type Threads struct{
     Lang string
     Detail string
 }
-type THredsVuewer struct{
+type ThreadsVuewer struct{
 	Title string
 	Userid string
     Datecreated string
@@ -58,12 +58,12 @@ func CheckUser(userid string)(user UserValues,err error){
 	return
 }
 
-func CheckAllThreads()(threads []THredsVuewer,err error){
+func CheckAllThreads()(threads []ThreadsVuewer,err error){
 	DbConection()
 	rows,err :=Db.Query("SElECT * from threads ORDER BY datecreated DESC")
 	if err !=nil{return}
 	for rows.Next(){
-		th :=THredsVuewer{}
+		th :=ThreadsVuewer{}
 		if err = rows.Scan(&th.Title,&th.Userid,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
 		th.HidUserid = th.Userid
 		th.HidTitle = th.Title
