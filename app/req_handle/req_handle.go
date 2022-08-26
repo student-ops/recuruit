@@ -19,9 +19,9 @@ func Top(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(userid)
 		threads := []query.THredsVuewer{}
 		threads,_ = query.CheckAllThreads();
-		t, _ := template.ParseFiles("html/top_after.html","html/posts.html")
+		t, _ := template.ParseFiles("html/top_after.html","html/threads.html")
 		err := t.ExecuteTemplate(w,"top_after",userid);if err != nil{panic(err)}
-		t.ExecuteTemplate(w,"posts", threads) //別関数にuser idを引数に追加する。
+		t.ExecuteTemplate(w,"threads", threads) //別関数にuser idを引数に追加する。
 	}else{
 		t, err := template.ParseFiles("html/top.html")
 		if err != nil {
@@ -121,19 +121,34 @@ func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 		h(w,r)
 	}
 }
-func VueThread(w http.ResponseWriter,r *http.Request){
+func ThreadPage(w http.ResponseWriter,r *http.Request){
 	thread_userid := r.FormValue("hid_userid")
 	thread_title := r.FormValue("hid_title")
 	thread_date_created := r.FormValue("hid_date_created")
-	fmt.Println("print thread_userid: bottom")
-	fmt.Println(thread_userid)
-	thread := query.Threads{}
-	thread,_ = query.CheckThread(thread_userid,thread_title,thread_date_created);
+	type thread_page struct{
+		Title string
+		Userid string
+		Datecreated string
+		Lang string
+		Detail string
+		HidThreadId string
+	}
+	q,_ := query.CheckThread(thread_userid,thread_title,thread_date_created);
+	//
+	thread_page_value := thread_page{
+		q.Title,
+		q.Userid,
+		q.Datecreated,
+		q.Lang,
+		q.Detail,
+		q.Userid,
+	}
+	fmt.Println(thread_page_value)
 	t,err := template.ParseFiles("html/thread.html")
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.ExecuteTemplate(w, "thread.html",thread); err != nil {
+	if err := t.ExecuteTemplate(w, "thread.html",thread_page_value); err != nil {
 		panic(err.Error())
 	}
 }

@@ -75,13 +75,13 @@ func CheckAllThreads()(threads []THredsVuewer,err error){
 }
 func CheckThread(userid string,title string,datecreated string) (thread Threads,err error){
 	fmt.Println("arrival check thred")
-	fmt.Println(userid)
-	fmt.Println(title)
-	fmt.Println(datecreated)
 	DbConection()
 	thread = Threads{}
 	rows := "SELECT title,userid,datecreated,lang,detail from threads WHERE userid = $1"
 	err = Db.QueryRow(rows,userid).Scan(&thread.Title,&thread.Userid,&thread.Datecreated,&thread.Lang,&thread.Detail)
+	if err != nil{
+		fmt.Println("can't fetch dbdata in checkthread query")
+	}
 	return
 }
 func ThreadAdd(thread Threads){

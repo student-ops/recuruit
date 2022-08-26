@@ -22,7 +22,7 @@ func main() {
 	mux.HandleFunc("/login_confirm",req_handle.LoginConfirm)
 	mux.HandleFunc("/create_project",req_handle.CreateProject)
 	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
-	mux.HandleFunc("/vue_thread",req_handle.VueThread)
+	mux.HandleFunc("/thread_page",req_handle.ThreadPage)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: ":9000",
