@@ -1,15 +1,10 @@
-## 作成　ファイル
+## Difference btween master
 
-html
+    potgres dockercompose の追加。統合docker composeを削除　app/queryのDB接続設定を変更。
 
-- create :アカウント作成
-- login :ログイン
-- top : トップページ(ログイン前)
-- top_after : トップページ(ログイン後)
+## Postgres DB
 
-### DB
-
-user table
+user values
 |colum | datail |
 | ----- | -----|
 |user id | varchar*50)|
@@ -17,25 +12,26 @@ user table
 |date created |date time |
 |date updated| date time|
 |date deleted | date time|
-mysql
-create table
+|-|-|
 
-authorization
+//authorization
 
 | colum        | datail                    |
-| ------------ | ------------------------- | --- |
+| ------------ | ------------------------- |
 | user id      |                           |
 | login id     | autoinclement, Primarykey |
-| user name    |                           |     |
+| user name    |                           |
 | date created |                           |
 | date updated |                           |
+| -            | -                         |
 
-post
+thread
 |colum|type|
 |- |-|
 |title|varchar(50) primary|
 |datacreated| varchar(50) primary|
 |lang|int|
 |detail|varchar(300)|
+|-|-|
 
 memo
