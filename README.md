@@ -7,31 +7,46 @@
 user values
 |colum | datail |
 | ----- | -----|
-|user id | varchar*50)|
-|pass word | varchar*50)|
+|user id | bigint auto incremnt primarykey|
+|user name | varchar(50)|
 |date created |date time |
-|date updated| date time|
-|date deleted | date time|
 |-|-|
 
-//authorization
+user profile
 
-| colum        | datail                    |
-| ------------ | ------------------------- |
-| user id      |                           |
-| login id     | autoinclement, Primarykey |
-| user name    |                           |
-| date created |                           |
-| date updated |                           |
-| -            | -                         |
+| colum           | type               |
+| --------------- | ------------------ |
+| userid          | bigint primary key |
+| back end skill  | int (bit)          |
+| front end skill | int (bit)          |
+| infla skill     | int(bit)           |
+| message         | varcahr(200)       |
+
+personal
+|colum | datail |
+| ----- | -----|
+|user id | bit int primarykey|
+|pass word| string //plan bit//|
+| mail address//paln | string|
 
 thread
 |colum|type|
-|- |-|
-|title|varchar(50) primary|
-|datacreated| varchar(50) primary|
+|--|--|
+|threadid| BIGSERIAL PRIMARY KEY|
+|title|varchar(50) |
+|datacreated| varchar(50)|
+|user id|int|
 |lang|int|
-|detail|varchar(300)|
-|-|-|
+|detail |varchar(600)|
+
+commnet
+|colum|type|
+|--|-|
+|userid | -|
+|thread name |varchar(50) primary key|
+|thread created|varchar(50) primary key|
+|id|varchar (50) primary key|
+|date added|date time|
+|content| varchar (400)|
 
 memo
