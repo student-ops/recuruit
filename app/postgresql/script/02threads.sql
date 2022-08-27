@@ -1,25 +1,26 @@
 \c recuruit
 
 CREATE TABLE IF NOT EXISTS threads(
+    thread_id BIGSERIAL PRIMARY KEY,
     title varchar(50),
-    userid varchar(50),
+    userid BIGINT,
     datecreated timestamp,
     lang int,
-    detail varchar(300),
-    PRIMARY KEY (title,datecreated)
+    detail varchar(600)
 );
 GRANT ALL PRIVILEGES ON threads TO recuruit;
--- insertのところにもschema名を付ける必要がある
 INSERT INTO threads values(
+    default,
     'first thread',
-    'fefe',
+    1,
     now(),
     1,
     'golang develop ment!'
 );
 INSERT INTO threads values(
+    default,
     'js dev',
-    'rakky',
+    2,
     now(),
     1,
     'js develop ment!'

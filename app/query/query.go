@@ -7,9 +7,9 @@ import (
 	_ "github.com/lib/pq"
 )
 type UserValues struct{
-	Userid string
-	Password string
-	Created string
+	UserId int64
+	UserName string
+	PassWord string
 }
 type Threads struct{
 	Title string
@@ -18,16 +18,7 @@ type Threads struct{
     Lang string
     Detail string
 }
-type ThreadsVuewer struct{
-	Title string
-	Userid string
-    Datecreated string
-    Lang string
-    Detail string
-	HidUserid string
-	HidTitle string
-	HidDateCreated string
-}
+
 
 var Db *sql.DB
 func DbConection(){
@@ -43,31 +34,35 @@ func Register(user UserValues){
 	//user.Password = data.Encrypt
 	var err error
 	DbConection()
-	sql_statement := "INSERT INTO UserValues(userid,password,created)values($1,$2,now());"
-	_, err = Db.Exec(sql_statement,user.Userid,user.Password);
+	sql_statement := "INSERT INTO uservalues(userid,username,created)values(DEFAULT,$1,now());"
+	_, err = Db.Exec(sql_statement,user.UserName);
+	sql_statement = "INSERT INTO personal(userid,password) values (DEFAULT,$1);"
+	_ ,err = Db.Exec(sql_statement,user.PassWord);
 	if err != nil{
 		panic(err)
 	}
 }
 
-func CheckUser(userid string)(user UserValues,err error){
-	user = UserValues{}
+func CheckUser(userid string)(checked_value UserValues){
 	DbConection()
-	sql_statement:= "SELECT userid, password, created FROM UserValues WHERE userid = $1"
-	err = Db.QueryRow(sql_statement,userid).Scan(&user.Userid,&user.Password,&user.Created)
+	checked_value = UserValues{}
+	sql_statement:= "SELECT userid, username FROM uservalues WHERE userid = $1"
+	err := Db.QueryRow(sql_statement,userid).Scan(&checked_value.UserId,&checked_value.UserName)
+	if err != nil {
+		panic(err)
+	}
+	sql_statement := "SLECT password FROM "
+
 	return
 }
 
-func CheckAllThreads()(threads []ThreadsVuewer,err error){
+func CheckAllThreads()(threads []Threads,err error){
 	DbConection()
 	rows,err :=Db.Query("SElECT * from threads ORDER BY datecreated DESC")
 	if err !=nil{return}
 	for rows.Next(){
-		th :=ThreadsVuewer{}
+		th :=Threads{}
 		if err = rows.Scan(&th.Title,&th.Userid,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
-		th.HidUserid = th.Userid
-		th.HidTitle = th.Title
-		th.HidDateCreated = th.Datecreated
 		threads = append(threads, th)
 		fmt.Println(th)
 	}

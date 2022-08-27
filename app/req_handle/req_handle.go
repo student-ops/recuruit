@@ -54,11 +54,6 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 }
-/*
-再開ポイント
-
-
-*/
 func UserConfirm(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/create_account_confirm.html")
 	values := map[string]string{
@@ -75,8 +70,8 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 func UserRegister(h http.HandlerFunc)http.HandlerFunc{
 	return func (w http.ResponseWriter, r *http.Request,){
 		uservalues := query.UserValues{}
-		uservalues.Userid = r.FormValue("hid_userid")
-		uservalues.Password= r.FormValue("hid_password")
+		uservalues.UserName = r.FormValue("hid_userid")
+		uservalues.PassWord= r.FormValue("hid_password")
 		query.Register(uservalues)
 		h(w,r)
 	}
@@ -92,10 +87,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
-	Userid := r.FormValue("userid")
-	fmt.Println(Userid)
+	uservalue := query.UserValues{
+		UserName : r.FormValue("userid"),
+		PassWord : r.FormValue(("password")),
+	}
 	ans := query.UserValues{}
-	ans ,err := query.CheckUser(Userid)
+	ans ,err := query.CheckUser(uservalue)
 	if err != nil{
 		fmt.Printf("ログインに失敗しました。")
 	}
@@ -162,14 +159,3 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 	}
 }
 
-//func Posts(w http.ResponseWriter, r *http.Request){
-	//threads := []query.Threads{}
-	//threads,_ = query.CheckAllThreads();
-	//t, err := template.ParseFiles("html/post.html")
-	//if err != nil {
-	//	panic(err.Error())
-	//}
-	//if err := t.Execute(w, threads,); err != nil {
-	//	panic(err.Error())
-	//}
-//}

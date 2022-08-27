@@ -3,21 +3,17 @@
   {{range.}}
   <div class="thread">
     <form action="thread_page" method="post">
-      <tr>
-        <td>{{.Title}}</td>
-      </tr>
-      <tr>
-        <td>{{.Userid}}</td>
-      </tr>
-      <tr>
-        <td>{{.Datecreated}}</td>
-      </tr>
-      <tr>
-        <td>{{.Lang}}</td>
-      </tr>
-      <tr>
-        <td>{{.Detail}}</td>
-      </tr>
+      <p>{{.Title}}</p>
+      <p>{{.Userid}}</p>
+      <p calss="thread-created">{{.Datecreated}}</p>
+      <!-- <script type="text/javascript">
+        const p = document.getElementById("thread-created");
+        const date = p.innerText;
+        console.log(date);
+        console.log("hello");
+      </script> -->
+      <p>{{.Lang}}</p>
+      <p>{{.Detail}}</p>
       <input type="hidden" name="hid_userid" value="{{.HidUserid}}" />
       <input type="hidden" name="hid_title" value="{{.HidTitle}}" />
       <input
@@ -28,6 +24,6 @@
       <input type="submit" value="投稿をみる" />
     </form>
   </div>
-  {{end}}
+  {{ end }}
 </div>
-{{end}}
+{{ end }}
