@@ -19,7 +19,7 @@ func Top(w http.ResponseWriter, r *http.Request) {
 		threads,_ := query.CheckAllThreads();
 		type top_after_value struct{
 			Userid string
-			Threads  []query.ThreadsVuewer
+			Threads  []query.Threads
 		}
 		Value := top_after_value{
 			Userid: userid,
@@ -89,17 +89,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	uservalue := query.UserValues{
 		UserName : r.FormValue("userid"),
-		PassWord : r.FormValue(("password")),
+		PassWord : r.FormValue("password"),
 	}
 	ans := query.UserValues{}
-	ans ,err := query.CheckUser(uservalue)
+	ans ,err := query.LoginCheck(uservalue)
 	if err != nil{
 		fmt.Printf("ログインに失敗しました。")
 	}
-	if ans.Userid  != ""{
+	tmp := &ans.UserId
+
+	// decelrede but it peform false
+	if  tmp != nil{
 		authentication := http.Cookie{
 			Name: "user_authentication",
-			Value: ans.Userid,
+			Value: ans.UserName,
 			HttpOnly: true,
 		}
 		http.SetCookie(w,&authentication)
@@ -122,7 +125,7 @@ func CreateProject(w http.ResponseWriter,R *http.Request){
 func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 	return func(w http.ResponseWriter,r *http.Request){
 		thread := query.Threads{}
-		thread.Userid =	util.CheckCookie(w,r);
+		thread.UserId =	util.CheckCookie(w,r);
 		thread.Title = r.FormValue("title")
 		thread.Detail = r.FormValue("datail")
 		thread.Lang = r.FormValue("lang")
@@ -145,7 +148,7 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 	//
 	thread_page_value := thread_value{
 		Thread: q,
-		HidUserid: q.Userid,
+		HidUserid: q.UserId,
 		HidTitle: q.Title,
 		HidDateCreated: q.Datecreated,
 	}

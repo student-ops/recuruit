@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS personal(
     userid BIGINT PRIMARY KEY,
-    passward VARCHAR(50)
+    password VARCHAR(50)
 );
 
 GRANT ALL PRIVILEGES ON personal TO recuruit;
