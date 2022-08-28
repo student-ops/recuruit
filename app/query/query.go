@@ -12,13 +12,13 @@ type UserValues struct{
 	PassWord string
 }
 type Threads struct{
+	ThreadId int64
 	Title string
-	UserId string
-    Datecreated string
+	UserId int64
+    DateCreated string
     Lang string
     Detail string
 }
-
 
 var Db *sql.DB
 func DbConection(){
@@ -28,6 +28,7 @@ func DbConection(){
 		fmt.Println("can't connect sql")
 			panic(err)
 	}
+	fmt.Println("connected")
 }
 
 func Register(user UserValues){
@@ -70,36 +71,46 @@ func LoginCheck(uservalue UserValues)(checked_value UserValues ,err error){
 		if tmp == uservalue.PassWord{
 			checked_value.UserId = int64(hit_user_id[s])
 			checked_value.PassWord = tmp
-			fmt.Println(checked_value)
+			fmt.Println("login succusesed")
 		}
 	}
 	return 
 }
 func CheckUser(userid int64)string {
 	var username string
-	sql_statement := "SELECT (userid, username) from uservalues WHERE userid = $1"
+	sql_statement := "SELECT username from uservalues WHERE userid = $1"
 	if err := Db.QueryRow(sql_statement,userid).Scan(&username); err != nil{
+		fmt.Println("err occured checkuser")
 		panic(err)
 	}
 	return username
 }
 func CheckAllThreads()(threads []Threads,err error){
 	DbConection()
-	rows,err :=Db.Query("SElECT * from threads ORDER BY datecreated DESC")
-	if err !=nil{return}
+	fmt.Println("arrival checkallthreads")
+	sql_statement := "SELECT * from threads ORDER BY datecreated DESC"
+	rows,err :=Db.Query(sql_statement)
+	if err != nil{
+		panic(err)
+	}
 	for rows.Next(){
 		th :=Threads{}
-		if err = rows.Scan(&th.Title,&th.UserId,&th.Datecreated,&th.Lang,&th.Detail);err !=nil{return}
+		if err = rows.Scan(&th.ThreadId, &th.Title,&th.UserId,&th.DateCreated,&th.Lang,&th.Detail);err !=nil{
+			// &th.Title,&th.UserId,&th.DateCreated,&th.Lang,&th.Detail
+			panic(err)
+		}
 		threads = append(threads, th)
+		fmt.Println(th)
 	}
 	return
 }
-func CheckThread(userid string,title string,datecreated string) (thread Threads,err error){
-	fmt.Println("arrival check thred")
+
+func CheckThread(threadid string) (thread Threads,err error){
+	fmt.Println(threadid)
 	DbConection()
 	thread = Threads{}
-	rows := "SELECT title,userid,datecreated,lang,detail from threads WHERE userid = $1"
-	err = Db.QueryRow(rows,userid).Scan(&thread.Title,&thread.UserId,&thread.Datecreated,&thread.Lang,&thread.Detail)
+	sql_statement := "SELECT * from threads WHERE threadid = $1"
+	err = Db.QueryRow(sql_statement,threadid).Scan(&thread.ThreadId,&thread.Title,&thread.UserId,&thread.DateCreated,&thread.Lang,&thread.Detail)
 	if err != nil{
 		fmt.Println("can't fetch dbdata in checkthread query")
 	}
@@ -107,7 +118,7 @@ func CheckThread(userid string,title string,datecreated string) (thread Threads,
 }
 func ThreadAdd(thread Threads)error {
 	var err error
-	sql_statement := "INSERT INTO threads(title,userid,datecreated,lang,detail)values($1,$2,now(),$3,$4);"
+	sql_statement := "INSERT INTO threads(title,userid,DateCreated,lang,detail)values($1,$2,now(),$3,$4);"
 	_ , err = Db.Exec(sql_statement, thread.Title,thread.UserId,thread.Lang,thread.Detail);
 	if err != nil {
 		panic(err)

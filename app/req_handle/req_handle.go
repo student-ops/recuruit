@@ -3,27 +3,50 @@ package req_handle
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"test/query"
 	"test/util"
 	"text/template"
 )
-
-/*
-var FormValue map[string]string = map[string]string{
-	"user_id": "",
-	"pass_word": "",
+type vue_threads struct{
+	Title string
+	UserName string
+	Lang string
+	Detail string
+	DateCreated string
+	HidThreadId string
 }
-*/
+func ThreadToVueThread(thread_data query.Threads)vue_threads{
+	threadid  := strconv.FormatInt(thread_data.ThreadId ,10)
+	username  := query.CheckUser(thread_data.UserId)
+	vue_thread := vue_threads{
+		thread_data.Title,
+		username,
+		thread_data.Lang,
+		thread_data.Detail,
+		thread_data.DateCreated,
+		threadid,
+	}
+	return vue_thread
+}
 func Top(w http.ResponseWriter, r *http.Request) {
 	if userid := util.CheckCookie(w,r); userid != ""{
 		threads,_ := query.CheckAllThreads();
+		fmt.Println(threads)
+		//you should make this map. this declare is toolong
+		Thread := []vue_threads{}
+		for i := range threads {		th := ThreadToVueThread(threads[i]);
+			Thread = append(Thread,th)
+		}
 		type top_after_value struct{
 			Userid string
-			Threads  []query.Threads
+			Threads  []vue_threads
 		}
+		userid_int ,_:= strconv.ParseInt(userid,10,64)	
+		username := query.CheckUser(userid_int)
 		Value := top_after_value{
-			Userid: userid,
-			Threads: threads,
+			Userid: username,
+			Threads: Thread,
 		}
 		t, _ := template.ParseFiles(
 		"html/top_after.gohtml",
@@ -88,29 +111,32 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	uservalue := query.UserValues{
-		UserName : r.FormValue("userid"),
+		UserName : r.FormValue("username"),
 		PassWord : r.FormValue("password"),
 	}
+	fmt.Println(uservalue)
 	ans := query.UserValues{}
 	ans ,err := query.LoginCheck(uservalue)
+	fmt.Println(ans)
 	if err != nil{
-		fmt.Printf("ログインに失敗しました。")
+		fmt.Println("ログインに失敗しました。")
 	}
-	tmp := &ans.UserId
-
 	// decelrede but it peform false
-	if  tmp != nil{
+	if  ans.UserId != 0{
+		ans.UserName = uservalue.UserName
 		authentication := http.Cookie{
 			Name: "user_authentication",
-			Value: ans.UserName,
+			Value:strconv.FormatInt( ans.UserId,10),
 			HttpOnly: true,
 		}
 		http.SetCookie(w,&authentication)
 		http.Redirect(w,r,"/",302)
 	}else{
 		t, _ := template.ParseFiles("html/error.html")
-		error_massage := "UserIdまたはパスワードが異なります。"
-		t.ExecuteTemplate(w,"error.html",error_massage)
+		m := make(map[string]string)
+		m["ErrorMassage"]= "UserIdまたはパスワードが異なります。"
+		fmt.Println(m["ErrorMassage"])
+		t.ExecuteTemplate(w,"error.html",m)
 	}
 }
 func CreateProject(w http.ResponseWriter,R *http.Request){
@@ -124,8 +150,9 @@ func CreateProject(w http.ResponseWriter,R *http.Request){
 }
 func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 	return func(w http.ResponseWriter,r *http.Request){
+		s, _ := strconv.ParseInt(util.CheckCookie(w,r), 10, 64)
 		thread := query.Threads{}
-		thread.UserId =	util.CheckCookie(w,r);
+		thread.UserId  = s
 		thread.Title = r.FormValue("title")
 		thread.Detail = r.FormValue("datail")
 		thread.Lang = r.FormValue("lang")
@@ -135,25 +162,35 @@ func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
 	}
 }
 func ThreadPage(w http.ResponseWriter,r *http.Request){
-	thread_userid := r.FormValue("hid_userid")
-	thread_title := r.FormValue("hid_title")
-	thread_date_created := r.FormValue("hid_date_created")
-	type thread_value struct{
-		Thread query.Threads
-		HidUserid string
-		HidTitle string	
-		HidDateCreated string
+	thread_id := r.FormValue("hid_thread_id")
+	th,_ := query.CheckThread(thread_id);
+	type thread_page struct{
+		Title string
+		UserName string
+		DateCreated string
+		Lang string
+		Detail string
+		HidThreadId string
+		Comments []map[string]string
 	}
-	q,_ := query.CheckThread(thread_userid,thread_title,thread_date_created);
-	//
-	thread_page_value := thread_value{
-		Thread: q,
-		HidUserid: q.UserId,
-		HidTitle: q.Title,
-		HidDateCreated: q.Datecreated,
+	thread := ThreadToVueThread(th)
+	var Comments  []map[string]string
+	comments := query.SelectAllComment(thread_id)
+	for i := range comments{
+		s := map[string]string{}
+		Comments[i] = s
 	}
-	fmt.Println(thread_page_value)
-	t,err := template.ParseFiles("html/thread.gohtml","html/header.gohtml","html/thread_content.gohtml","html/footer.gohtml")
+	thread_page_value := thread_page{
+		thread.Title,
+		thread.UserName,
+		thread.DateCreated,
+		thread.Lang,
+		thread.Detail,
+		thread.HidThreadId,
+		Comments,
+	}
+	fmt.Printf("thread_page_value\n %v\n",thread_page_value)
+	t,err := template.ParseFiles("html/thread.gohtml","html/header.gohtml","html/comments.gohtml","html/footer.gohtml")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -161,4 +198,3 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 		panic(err.Error())
 	}
 }
-

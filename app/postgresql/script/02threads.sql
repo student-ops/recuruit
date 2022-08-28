@@ -1,7 +1,7 @@
 \c recuruit
 
 CREATE TABLE IF NOT EXISTS threads(
-    thread_id BIGSERIAL PRIMARY KEY,
+    threadid BIGSERIAL PRIMARY KEY,
     title varchar(50),
     userid BIGINT,
     datecreated timestamp,

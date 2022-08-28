@@ -4,8 +4,8 @@
   <div class="thread">
     <form action="thread_page" method="post">
       <p>{{.Title}}</p>
-      <p>{{.Userid}}</p>
-      <p calss="thread-created">{{.Datecreated}}</p>
+      <p>{{.UserName}}</p>
+      <p calss="thread-created">{{.DateCreated}}</p>
       <!-- <script type="text/javascript">
         const p = document.getElementById("thread-created");
         const date = p.innerText;
@@ -14,13 +14,7 @@
       </script> -->
       <p>{{.Lang}}</p>
       <p>{{.Detail}}</p>
-      <input type="hidden" name="hid_userid" value="{{.HidUserid}}" />
-      <input type="hidden" name="hid_title" value="{{.HidTitle}}" />
-      <input
-        type="hidden"
-        name="hid_date_created"
-        value="{{.HidDateCreated}}"
-      />
+      <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
       <input type="submit" value="投稿をみる" />
     </form>
   </div>
