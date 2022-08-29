@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -14,29 +15,32 @@ type Comments struct{
 }
 
 func InsertComment(c Comments){
-	sql_statement := "INSERT INTO comment (thread_id,added,userid,comment_content VALUES ($1,now(),$2,$3);"
+	DbConection()
+	sql_statement := "INSERT INTO comment (threadid,added,userid,comment_content) VALUES ($1,now(),$2,$3);"
 	r , err := Db.Exec(sql_statement,c.ThreadId,c.Userid,c.CommentContent)
-	fmt.Println(r)
 	if err != nil{
+		fmt.Printf("db exec result %v\n",r)
 		panic(err)
 	}
 }
 
 func SelectAllComment(threadid string)(comments []Comments){
-	fmt.Println("arrival point0")
-	sql_statement := "SELECT * FROM comment WHERE threadid = $1ORDER by added ASC"
-	rows,err := Db.Query(sql_statement,threadid); 
+	sql_statement := "SELECT * FROM comment WHERE threadid = $1"
+	fmt.Printf("threadid for comment %s \n",threadid)
+	rows,err := Db.Query(sql_statement,threadid)
 	if err != nil{
-		fmt.Println("error point 1")
-		panic(err)
+		log.Fatal(err)
 	}
+	fmt.Printf("rows:%v\n",rows)
+	defer rows.Close()
 	for rows.Next(){
 		c := Comments{}
-		if err = rows.Scan(&c.ThreadId,&c.Added,&c.Userid,&c.CommentContent); err != nil{
-			fmt.Println("error point 2")
+		err = rows.Scan(&c.ThreadId,&c.Added,&c.Userid,&c.CommentContent)
+		if err != nil{
 			panic(err)
 		}
 		comments = append(comments, c)
 	}
+		fmt.Println("not yet")
 	return
 }

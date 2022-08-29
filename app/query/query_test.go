@@ -1,7 +1,6 @@
 package query
 
 import (
-	"fmt"
 	"testing"
 )
 func Test(t *testing.T){
@@ -11,6 +10,11 @@ func Test(t *testing.T){
 	// }
 	// username := CheckUser(3)
 	// fmt.Println(username)
-	th ,_ := CheckAllThreads();
-	fmt.Println(th)
+	thread := Threads{
+		UserId: 1,
+		Title: "hell",
+		Lang: 2,
+		Detail: "hello",
+	}
+	ThreadAdd(thread)
 }

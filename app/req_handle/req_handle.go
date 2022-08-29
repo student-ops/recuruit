@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"test/query"
+	"test/session"
 	"test/util"
 	"text/template"
 )
@@ -22,7 +23,7 @@ func ThreadToVueThread(thread_data query.Threads)vue_threads{
 	vue_thread := vue_threads{
 		thread_data.Title,
 		username,
-		thread_data.Lang,
+		util.ConvertLang(thread_data.Lang),
 		thread_data.Detail,
 		thread_data.DateCreated,
 		threadid,
@@ -30,19 +31,23 @@ func ThreadToVueThread(thread_data query.Threads)vue_threads{
 	return vue_thread
 }
 func Top(w http.ResponseWriter, r *http.Request) {
-	if userid := util.CheckCookie(w,r); userid != ""{
+	cookie_value := util.CheckCookie(w,r)
+	cookie_value_int ,_ := strconv.Atoi(cookie_value)
+	fmt.Printf("top tmp_cookie_value_int %v\n",cookie_value_int)
+	fmt.Printf("top tmp_session[userid]:%v\n",session.Tmp_session[cookie_value_int])
+	if  session.Tmp_session[cookie_value_int]{
 		threads,_ := query.CheckAllThreads();
-		fmt.Println(threads)
 		//you should make this map. this declare is toolong
 		Thread := []vue_threads{}
-		for i := range threads {		th := ThreadToVueThread(threads[i]);
+		for i := range threads {		
+			th := ThreadToVueThread(threads[i]);
 			Thread = append(Thread,th)
 		}
 		type top_after_value struct{
 			Userid string
 			Threads  []vue_threads
 		}
-		userid_int ,_:= strconv.ParseInt(userid,10,64)	
+		userid_int ,_:= strconv.ParseInt(cookie_value,10,64)	
 		username := query.CheckUser(userid_int)
 		Value := top_after_value{
 			Userid: username,
@@ -50,8 +55,9 @@ func Top(w http.ResponseWriter, r *http.Request) {
 		}
 		t, _ := template.ParseFiles(
 		"html/top_after.gohtml",
-		"html/header.gohtml",
+		"html/top_header.gohtml",
 		"html/threads.gohtml",
+		"html/serch.gohtml",
 		"html/footer.gohtml",
 		)
 		err := t.ExecuteTemplate(w,"top_after.gohtml",Value);if err != nil{
@@ -90,6 +96,7 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 }
 
 //create htmlから受け取ってquery.registerに
+// redirect login comfirm
 func UserRegister(h http.HandlerFunc)http.HandlerFunc{
 	return func (w http.ResponseWriter, r *http.Request,){
 		uservalues := query.UserValues{}
@@ -114,22 +121,27 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 		UserName : r.FormValue("username"),
 		PassWord : r.FormValue("password"),
 	}
-	fmt.Println(uservalue)
-	ans := query.UserValues{}
-	ans ,err := query.LoginCheck(uservalue)
-	fmt.Println(ans)
-	if err != nil{
+	login_check_ans ,err := query.LoginCheck(uservalue)
+	fmt.Printf("req_handle login conf ans:%v\n",login_check_ans)
+	if err != nil || login_check_ans.UserId == 0{
 		fmt.Println("ログインに失敗しました。")
 	}
-	// decelrede but it peform false
-	if  ans.UserId != 0{
-		ans.UserName = uservalue.UserName
+	//query.Logincheck aceepted
+	if  login_check_ans.UserId != 0{
+		login_check_ans.UserName = uservalue.UserName
 		authentication := http.Cookie{
-			Name: "user_authentication",
-			Value:strconv.FormatInt( ans.UserId,10),
+			Name: "user",
+			Value: strconv.FormatInt(login_check_ans.UserId,10),//string value
 			HttpOnly: true,
 		}
 		http.SetCookie(w,&authentication)
+		if session.Tmp_session == nil{
+			session.Tmp_session = make(map[int]bool)
+		}
+		cookie_value_int := int(login_check_ans.UserId)
+		fmt.Printf("reqhandle login conf cookivalueint :%d\n",cookie_value_int)
+		session.Tmp_session[cookie_value_int] = true
+		fmt.Printf("reqhandle login conf cookivalueint :%v\n",session.Tmp_session[cookie_value_int])
 		http.Redirect(w,r,"/",302)
 	}else{
 		t, _ := template.ParseFiles("html/error.html")
@@ -148,21 +160,30 @@ func CreateProject(w http.ResponseWriter,R *http.Request){
 		panic(err.Error())
 	}
 }
-func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
-	return func(w http.ResponseWriter,r *http.Request){
+func ConfirmProject(w http.ResponseWriter,r *http.Request){
 		s, _ := strconv.ParseInt(util.CheckCookie(w,r), 10, 64)
+		fmt.Printf("confirmproj cookie value:%v\n",s)
+		lang,_ :=  strconv.Atoi(r.FormValue("lang"))
 		thread := query.Threads{}
 		thread.UserId  = s
 		thread.Title = r.FormValue("title")
 		thread.Detail = r.FormValue("datail")
-		thread.Lang = r.FormValue("lang")
+		thread.Lang = lang
 		fmt.Println(thread)
 		query.ThreadAdd(thread)
-		h(w,r)
-	}
+		http.Redirect(w,r,"/",302)
 }
+var ThreadIdComment string
 func ThreadPage(w http.ResponseWriter,r *http.Request){
 	thread_id := r.FormValue("hid_thread_id")
+	fmt.Printf("threadpage threadid:%v\n",thread_id)
+	cookie_value_int := util.CheckCookieInt(w,r)
+	if thread_id == ""{
+		thread_id = strconv.Itoa(session.Tmp_thread_session[cookie_value_int])
+		fmt.Printf("session thread id %s\n",thread_id)
+	}else{
+		//redirect top
+	}
 	th,_ := query.CheckThread(thread_id);
 	type thread_page struct{
 		Title string
@@ -174,12 +195,15 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 		Comments []map[string]string
 	}
 	thread := ThreadToVueThread(th)
-	var Comments  []map[string]string
 	comments := query.SelectAllComment(thread_id)
+	fmt.Printf("len(comment):%v",len(comments))
+	Comments := make([]map[string]string,len(comments))
 	for i := range comments{
 		s := map[string]string{}
+		s = CommentTOVueComment(comments[i])
 		Comments[i] = s
 	}
+	fmt.Printf("comments;%v",Comments)
 	thread_page_value := thread_page{
 		thread.Title,
 		thread.UserName,

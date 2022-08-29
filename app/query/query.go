@@ -3,6 +3,7 @@ package query
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -16,7 +17,7 @@ type Threads struct{
 	Title string
 	UserId int64
     DateCreated string
-    Lang string
+    Lang int
     Detail string
 }
 
@@ -35,7 +36,8 @@ func Register(user UserValues){
 	//user.Password = data.Encrypt
 	var err error
 	DbConection()
-	sql_statement := "INSERT INTO uservalues(userid,username,created)values(DEFAULT,$1,now());"
+	fmt.Printf("query.register uservalues:%v\n",user)
+	sql_statement := "INSERT INTO uservalues(user:%v\nid,username,created)values(DEFAULT,$1,now());"
 	if _, err = Db.Exec(sql_statement,user.UserName);err != nil{
 		panic(err)
 	}
@@ -71,7 +73,7 @@ func LoginCheck(uservalue UserValues)(checked_value UserValues ,err error){
 		if tmp == uservalue.PassWord{
 			checked_value.UserId = int64(hit_user_id[s])
 			checked_value.PassWord = tmp
-			fmt.Println("login succusesed")
+			fmt.Println("query loginckechk succusesed")
 		}
 	}
 	return 
@@ -93,6 +95,7 @@ func CheckAllThreads()(threads []Threads,err error){
 	if err != nil{
 		panic(err)
 	}
+	defer rows.Close()
 	for rows.Next(){
 		th :=Threads{}
 		if err = rows.Scan(&th.ThreadId, &th.Title,&th.UserId,&th.DateCreated,&th.Lang,&th.Detail);err !=nil{
@@ -106,7 +109,6 @@ func CheckAllThreads()(threads []Threads,err error){
 }
 
 func CheckThread(threadid string) (thread Threads,err error){
-	fmt.Println(threadid)
 	DbConection()
 	thread = Threads{}
 	sql_statement := "SELECT * from threads WHERE threadid = $1"
@@ -116,12 +118,25 @@ func CheckThread(threadid string) (thread Threads,err error){
 	}
 	return
 }
-func ThreadAdd(thread Threads)error {
-	var err error
-	sql_statement := "INSERT INTO threads(title,userid,DateCreated,lang,detail)values($1,$2,now(),$3,$4);"
-	_ , err = Db.Exec(sql_statement, thread.Title,thread.UserId,thread.Lang,thread.Detail);
+func ThreadAdd(thread Threads){
+	DbConection()
+	fmt.Printf("thread add thread :%v\n",thread)
+	sql_statement := "INSERT INTO threads(threadid,title,userid,datecreated,lang,detail)values(DEFAULT,$1,$2,now(),$3,$4);"
+	q, err := Db.Exec(sql_statement, thread.Title, thread.UserId, thread.Lang, thread.Detail);
 	if err != nil {
+		fmt.Println(q)
 		panic(err)
 	}
-	return err
+}
+
+func SelectUserIdFromThreadId(threadid string)(userid int64){
+	DbConection()
+	// if threadid == nil top return nil >>query redirect
+	fmt.Printf("query  selectuseridformthreadsid threadid :%v\n",threadid)
+	sql_statement := "SELECT userid FROM threads WHERE threadid = $1;"
+	err := Db.QueryRow(sql_statement,threadid).Scan(&userid)
+	if err != nil{
+		log.Fatal(err)
+	}
+	return
 }

@@ -1,22 +1,28 @@
 {{define "threads"}}
 <div class="threads">
   {{range.}}
-  <div class="thread">
-    <form action="thread_page" method="post">
-      <p>{{.Title}}</p>
-      <p>{{.UserName}}</p>
-      <p calss="thread-created">{{.DateCreated}}</p>
+  <div class="threads_thread">
+      <form id = "form_user" action="/user_page" method="post">
+        <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
+        <a class="thread_title" href = "javascript:;" onclick="document.getElementById('form_user').submit()">
+        <p class = "thread_user">{{.UserName}}</p>
+        </a>
+      </form>
+      <p class = "thread_created">{{.DateCreated}}</p>
+      <form id = "form_thread" action="/thread_page" method="post">
+        <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
+        <a class="thread_title" href = "javascript:;" onclick="document.getElementById('form_thread').submit()">
+        <div class= "thread_title_text">{{.Title}}</div>
+        </a>
+      </form>
       <!-- <script type="text/javascript">
         const p = document.getElementById("thread-created");
         const date = p.innerText;
         console.log(date);
         console.log("hello");
       </script> -->
-      <p>{{.Lang}}</p>
-      <p>{{.Detail}}</p>
-      <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
-      <input type="submit" value="投稿をみる" />
-    </form>
+      <p class= "threads_lang">{{.Lang}}</p>
+      <p class = "threads_detail">{{.Detail}}</p>
   </div>
   {{ end }}
 </div>

@@ -2,9 +2,9 @@
 
 CREATE TABLE IF NOT EXISTS userprofile(
     userid BIGSERIAL PRIMARY KEY,
-    backend int,
-    frontend int,
-    infra int,
+    --backend int,
+    --frontend int,
+    --infra int,
     profiletext VARCHAR(400)
 );
 
