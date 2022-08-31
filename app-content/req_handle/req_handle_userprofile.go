@@ -5,8 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"test/query"
+	"test/session"
 	"test/util"
 )
 
@@ -24,16 +24,17 @@ func MyPage(w http.ResponseWriter, r *http.Request,){
 	if err != nil{
 		log.Fatal(err)
 	}
-	userid := util.CheckCookie(w,r)
-	d ,_:=  strconv.ParseInt(userid,10,64)
+	session_userid := session.Tmp_session[util.CheckCookieInt(w,r)]
 	userprofile := vue_user_profile{
-		UserName: query.CheckUser(d),
-		ProfileText: query.SelectProfile(d),
+		UserName: query.CheckUser(int64(session_userid)),
+		ProfileText: query.SelectProfile(int64(session_userid)),
 	}
-	fmt.Printf("mypage userid :%s",userid)
 	t.ExecuteTemplate(w,"mypage.gohtml",userprofile)
 }
-
-func ChangeProfile(){
-
+func ChangeProfile(w http.ResponseWriter,r *http.Request){
+	text := r.FormValue("user_profile")
+	fmt.Printf("req_handle changeprofile text:%s",text)
+	userid := session.Tmp_session[util.CheckCookieInt(w,r)]
+	query.InsertProfile(userid,text)
+	http.Redirect(w,r,"/mypage",302)
 }

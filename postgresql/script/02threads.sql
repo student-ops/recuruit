@@ -8,20 +8,22 @@ CREATE TABLE IF NOT EXISTS threads(
     lang int,
     detail varchar(600)
 );
+
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO recuruit;
 GRANT ALL PRIVILEGES ON threads TO recuruit;
 INSERT INTO threads values(
     default,
-    'first thread',
+    'go言語でのバックエンド開発',
     1,
     now(),
     1,
-    'golang develop ment!'
+    'go言語を使用したマイクロサービスアーキテクチャの開発です。'
 );
 INSERT INTO threads values(
     default,
-    'js dev',
+    'javascriptフロントエンド開発です。',
     2,
     now(),
     1,
-    'js develop ment!'
+    'javascriptでのフロントエンド開発です。'
 );

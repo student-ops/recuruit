@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS personal(
 );
 
 GRANT ALL PRIVILEGES ON personal TO recuruit;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO recuruit;
 insert into personal values(DEFAULT,'test');
 insert into personal values(DEFAULT,'spaas');
 insert into personal values(DEFAULT,'revapool');

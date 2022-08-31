@@ -35,9 +35,8 @@ func Top(w http.ResponseWriter, r *http.Request) {
 	cookie_value_int ,_ := strconv.Atoi(cookie_value)
 	fmt.Printf("top tmp_cookie_value_int %v\n",cookie_value_int)
 	fmt.Printf("top tmp_session[userid]:%v\n",session.Tmp_session[cookie_value_int])
-	if  session.Tmp_session[cookie_value_int]{
+	if  session.Tmp_session[cookie_value_int] != 0{
 		threads,_ := query.CheckAllThreads();
-		//you should make this map. this declare is toolong
 		Thread := []vue_threads{}
 		for i := range threads {		
 			th := ThreadToVueThread(threads[i]);
@@ -94,7 +93,6 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(values)
 	t.ExecuteTemplate(w,"create_account_confirm.html",values)
 }
-
 //create htmlから受け取ってquery.registerに
 // redirect login comfirm
 func UserRegister(h http.HandlerFunc)http.HandlerFunc{
@@ -136,12 +134,12 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 		}
 		http.SetCookie(w,&authentication)
 		if session.Tmp_session == nil{
-			session.Tmp_session = make(map[int]bool)
+			session.Tmp_session = make(map[int]int)
 		}
-		cookie_value_int := int(login_check_ans.UserId)
-		fmt.Printf("reqhandle login conf cookivalueint :%d\n",cookie_value_int)
-		session.Tmp_session[cookie_value_int] = true
-		fmt.Printf("reqhandle login conf cookivalueint :%v\n",session.Tmp_session[cookie_value_int])
+		login_user_id:= int(login_check_ans.UserId)
+		fmt.Printf("reqhandle login conf cookivalueint :%d\n",login_user_id)
+		session.Tmp_session[login_user_id] = login_user_id
+		fmt.Printf("reqhandle login conf cookivalueint :%v\n",session.Tmp_session[login_user_id])
 		http.Redirect(w,r,"/",302)
 	}else{
 		t, _ := template.ParseFiles("html/error.html")
@@ -225,4 +223,11 @@ func ThreadPage(w http.ResponseWriter,r *http.Request){
 	if err := t.ExecuteTemplate(w, "thread.gohtml",thread_page_value); err != nil {
 		panic(err.Error())
 	}
+}
+
+func Logout(w http.ResponseWriter, r *http.Request){
+	cookie_value,_ := strconv.Atoi(util.CheckCookie(w,r))
+	delete(session.Tmp_session,cookie_value)
+	http.Redirect(w,r,"/",302)
+
 }

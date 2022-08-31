@@ -37,7 +37,7 @@ func Register(user UserValues){
 	var err error
 	DbConection()
 	fmt.Printf("query.register uservalues:%v\n",user)
-	sql_statement := "INSERT INTO uservalues(user:%v\nid,username,created)values(DEFAULT,$1,now());"
+	sql_statement := "INSERT INTO uservalues(userid,username,created)values(DEFAULT,$1,now());"
 	if _, err = Db.Exec(sql_statement,user.UserName);err != nil{
 		panic(err)
 	}

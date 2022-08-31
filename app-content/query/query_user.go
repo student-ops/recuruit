@@ -7,7 +7,7 @@ type UserProfile struct{
 }
 
 
-func InsertProfile(user_id string, text string){
+func InsertProfile(user_id int, text string){
 	DbConection()
 	sql_statement := "INSERT INTO userprofile(userid,profiletext)values ($1,$2);"
 	_,err := Db.Exec(sql_statement,user_id,text)
@@ -19,8 +19,15 @@ func InsertProfile(user_id string, text string){
 func SelectProfile(user_id int64)(text string){
 	DbConection()
 	sql_statement := "SELECT profiletext FROM userprofile WHERE userid = $1"
-	if err := Db.QueryRow(sql_statement,user_id).Scan(&text); err != nil{
+	rows, err := Db.Query(sql_statement,user_id)
+	if err != nil{
 		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next(){
+		if err =rows.Scan(&text); nil != err{
+			log.Fatal(err)
+		}
 	}
 	return text
 }
