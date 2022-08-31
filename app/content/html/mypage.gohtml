@@ -3,15 +3,19 @@
   <h1>マイページ</h1>
 </body>
 <p>ユーザー:{{.UserName}}</p>
-<p>{{.ProfileText}}</p>
+{{with ""}}
 <form action="change_profile">
   <table>
+    <p>{{.ProfileText}}コメントが追加されていません</p>
     <tr>
       <td>
         <input type="text" name="user_profile" />
       </td>
     </tr>
   </table>
-  <input type="submit" value="プロフィールを追加する。" />
+  <input type="submit" value="プロフィールコメントを追加する。" />
 </form>
+{{else}}
+  <p>プロフィール:{{.ProfileText}}</p>
+{{end}}
 {{template "footer"}}

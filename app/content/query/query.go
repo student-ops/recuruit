@@ -24,7 +24,7 @@ type Threads struct{
 var Db *sql.DB
 func DbConection(){
 	var err error
-	Db, err = sql.Open("postgres", "port =5432 user=recuruit dbname=recuruit password=recuruit sslmode=disable")
+	Db, err = sql.Open("postgres", "host = db port =5432 user=recuruit dbname=recuruit password=recuruit sslmode=disable")
 	if err != nil {
 		fmt.Println("can't connect sql")
 			panic(err)
