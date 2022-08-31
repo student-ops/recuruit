@@ -152,7 +152,11 @@ func LoginConfirm(w http.ResponseWriter, r *http.Request){
 	}
 }
 func CreateProject(w http.ResponseWriter,R *http.Request){
-	t, err := template.ParseFiles("html/create_project.html")
+	t, err := template.ParseFiles(
+		"html/create_project.gohtml",
+		"html/header.gohtml",
+		"html/footer.gohtml",
+	)
 	if err != nil {
 		panic(err.Error())
 	}

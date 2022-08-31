@@ -1,27 +1,28 @@
 {{define "threads"}}
 <div class="threads">
   {{range.}}
-  <div class="threads_thread">
-      <form id = "form_user" action="/user_page" method="post">
-        <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
-        <a class="thread_title" href = "javascript:;" onclick="document.getElementById('form_user').submit()">
-        <p class = "thread_user">{{.UserName}}</p>
-        </a>
-      </form>
-      <p class = "thread_created">{{.DateCreated}}</p>
+  <div class="threads_thread_{{.HidThreadId}}">
       <form id = "form_thread" action="/thread_page" method="post">
         <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
         <a class="thread_title" href = "javascript:;" onclick="document.getElementById('form_thread').submit()">
-        <div class= "thread_title_text">{{.Title}}</div>
+        <p class= "thread_title_text">{{.Title}}</p>
+      </a>
+      </form>
+      <form  id = "form_user" action="/user_page" method="post">
+        <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}" />
+        <span>作成者:</span>
+        <a class="thread_user" href = "javascript:;" onclick="document.getElementById('form_user').submit()">
+        <p class = "thread_user">{{.UserName}}</p>
         </a>
       </form>
-      <!-- <script type="text/javascript">
+      <span class = "thread_created">{{.DateCreated}}</span>
+            <!-- <script type="text/javascript">
         const p = document.getElementById("thread-created");
         const date = p.innerText;
         console.log(date);
         console.log("hello");
       </script> -->
-      <p class= "threads_lang">{{.Lang}}</p>
+      <p class= "threads_lang"><span>使用技術: </span>{{.Lang}}</p>
       <p class = "threads_detail">{{.Detail}}</p>
   </div>
   {{ end }}

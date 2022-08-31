@@ -1,5 +1,4 @@
 {{template "header"}}
-    <link rel = "stylesheet" href = "../resources/top_after.css" />
 <body>
     {{template "serch"}}
     {{with ""}}
@@ -7,7 +6,6 @@
     {{else}}
         <p>{{.Userid}}さんこんにちは</p>
     {{end}}
-        <h1>スレッド一覧</h1>
     {{template "threads" .Threads}}
 </body>
 </html>
