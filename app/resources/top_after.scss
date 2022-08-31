@@ -1,13 +1,21 @@
-.thread {
+$cGray: gray;
+.threads {
+  margin: 5% 10% 5% 40%;
+}
+.threads_thread {
+  border-bottom: 0.5px solid $cGray;
+  border-top: 0.5px solid $cGray;
+}
+#form_user {
+  display: inline;
 }
 .thread_user {
   display: inline;
 }
 .thread_created {
   display: inline;
+  padding: 0 10px;
 }
 .thread_title {
   display: inline-block;
-  text-align: center;
-  font-size: 150%;
 }

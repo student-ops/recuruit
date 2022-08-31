@@ -1,0 +1,18 @@
+{{template "header"}}
+<form action="confirm_project" method="post">
+  <p>プロジェクト名</p>
+  <input type="text" name="title" />
+  <div class="tag">
+    <p>タグ</p>
+    <div class="tag_backend"> </div>
+    <div class="tag_frontend"> </div>
+    <div class="tag_other"> </div>
+    <p> <input type="radio" name="lang" value="1" />golang </p>
+    <p> <input type="radio" name="lang" value="2" />javascript </p>
+    <!-- 追記よてい -->
+  </div>
+  <p>プロジェクト詳細</p>
+  <p><textarea name="datail" id="datail" rows="15" cols="50"></textarea></p>
+  <input type="submit" />
+</form>
+{{template "footer"}}
