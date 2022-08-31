@@ -1,11 +1,12 @@
 package util
 
 import (
-    "crypto/aes"
-    "crypto/cipher"
-    "fmt"
-    "os"
-    "net/http"
+	"crypto/aes"
+	"crypto/cipher"
+	"fmt"
+	"net/http"
+	"os"
+	"strconv"
 )
 
 var commonIV = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
@@ -42,11 +43,28 @@ func Encrypt(input string)(output string) {
     return output
 }
 func CheckCookie(w http.ResponseWriter,r *http.Request) string{
-    c, err := r.Cookie("user_authentication")
+    c, err := r.Cookie("user")
     if err != nil{
         return "";
     }
     fmt.Println(c.Value)
     userid := c.Value
     return userid
+}
+func CheckCookieInt(w http.ResponseWriter,r *http.Request) int{
+    cookie_value := CheckCookie(w,r)
+    cookie_value_int,_ := strconv.Atoi(cookie_value)
+    return cookie_value_int
+}
+
+    
+var language map[int]string
+func ConvertLang(langd int)(lang string){
+    if language == nil{
+        language = map[int]string{}
+    }
+    language[1] = "golang"
+    language[2] = "javascript"
+    lang = language[langd]
+    return lang
 }

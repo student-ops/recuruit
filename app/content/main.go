@@ -21,8 +21,13 @@ func main() {
 	mux.HandleFunc("/user_register",req_handle.UserRegister(req_handle.Top))
 	mux.HandleFunc("/login_confirm",req_handle.LoginConfirm)
 	mux.HandleFunc("/create_project",req_handle.CreateProject)
-	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject(req_handle.LoginConfirm))
-	mux.HandleFunc("/vue_thread",req_handle.VueThread)
+	mux.HandleFunc("/confirm_project",req_handle.ConfirmProject)
+	mux.HandleFunc("/thread_page",req_handle.ThreadPage)
+	mux.HandleFunc("/add_comment",req_handle.AddComment)
+	mux.HandleFunc("/mypage",req_handle.MyPage)
+	mux.HandleFunc("/user_page",req_handle.UserPage)
+	mux.HandleFunc("/logout",req_handle.Logout)
+	mux.HandleFunc("/change_profile",req_handle.ChangeProfile)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: ":9000",

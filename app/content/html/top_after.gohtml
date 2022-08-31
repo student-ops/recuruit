@@ -1,0 +1,12 @@
+{{template "header"}}
+<body>
+    {{template "serch"}}
+    {{with ""}}
+        <p>名前が取得されません。</p>
+    {{else}}
+        <p>{{.Userid}}さんこんにちは</p>
+    {{end}}
+    {{template "threads" .Threads}}
+</body>
+</html>
+{{template "footer"}}

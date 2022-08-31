@@ -1,0 +1,11 @@
+{{define "comments"}}
+<div calss = "comments">
+{{range.}}
+    <div class="comment">
+        <p>{{.UserName}}</p>
+        <p>{{.Added}}</p>
+        <p>{{.CommentContent}}</p>
+    </div>
+{{end}}
+</div>
+{{end}}

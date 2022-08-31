@@ -3,25 +3,66 @@ package req_handle
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"test/query"
+	"test/session"
 	"test/util"
 	"text/template"
 )
-
-/*
-var FormValue map[string]string = map[string]string{
-	"user_id": "",
-	"pass_word": "",
+type vue_threads struct{
+	Title string
+	UserName string
+	Lang string
+	Detail string
+	DateCreated string
+	HidThreadId string
 }
-*/
+func ThreadToVueThread(thread_data query.Threads)vue_threads{
+	threadid  := strconv.FormatInt(thread_data.ThreadId ,10)
+	username  := query.CheckUser(thread_data.UserId)
+	vue_thread := vue_threads{
+		thread_data.Title,
+		username,
+		util.ConvertLang(thread_data.Lang),
+		thread_data.Detail,
+		thread_data.DateCreated,
+		threadid,
+	}
+	return vue_thread
+}
 func Top(w http.ResponseWriter, r *http.Request) {
-	if userid := util.CheckCookie(w,r); userid != ""{
-		fmt.Println(userid)
-		threads := []query.THredsVuewer{}
-		threads,_ = query.CheckAllThreads();
-		t, _ := template.ParseFiles("html/top_after.html","html/posts.html")
-		err := t.ExecuteTemplate(w,"top_after",userid);if err != nil{panic(err)}
-		t.ExecuteTemplate(w,"posts", threads) //別関数にuser idを引数に追加する。
+	cookie_value := util.CheckCookie(w,r)
+	cookie_value_int ,_ := strconv.Atoi(cookie_value)
+	fmt.Printf("top tmp_cookie_value_int %v\n",cookie_value_int)
+	fmt.Printf("top tmp_session[userid]:%v\n",session.Tmp_session[cookie_value_int])
+	if  session.Tmp_session[cookie_value_int] != 0{
+		threads,_ := query.CheckAllThreads();
+		Thread := []vue_threads{}
+		for i := range threads {		
+			th := ThreadToVueThread(threads[i]);
+			Thread = append(Thread,th)
+		}
+		type top_after_value struct{
+			Userid string
+			Threads  []vue_threads
+		}
+		userid_int ,_:= strconv.ParseInt(cookie_value,10,64)	
+		username := query.CheckUser(userid_int)
+		Value := top_after_value{
+			Userid: username,
+			Threads: Thread,
+		}
+		t, _ := template.ParseFiles(
+		"html/top_after.gohtml",
+		"html/top_header.gohtml",
+		"html/threads.gohtml",
+		"html/serch.gohtml",
+		"html/footer.gohtml",
+		)
+		err := t.ExecuteTemplate(w,"top_after.gohtml",Value);if err != nil{
+			fmt.Println("error occured in top after")
+			panic(err)
+		}
 	}else{
 		t, err := template.ParseFiles("html/top.html")
 		if err != nil {
@@ -41,11 +82,6 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 }
-/*
-再開ポイント
-
-
-*/
 func UserConfirm(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/create_account_confirm.html")
 	values := map[string]string{
@@ -57,13 +93,13 @@ func UserConfirm(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(values)
 	t.ExecuteTemplate(w,"create_account_confirm.html",values)
 }
-
 //create htmlから受け取ってquery.registerに
+// redirect login comfirm
 func UserRegister(h http.HandlerFunc)http.HandlerFunc{
 	return func (w http.ResponseWriter, r *http.Request,){
 		uservalues := query.UserValues{}
-		uservalues.Userid = r.FormValue("hid_userid")
-		uservalues.Password= r.FormValue("hid_password")
+		uservalues.UserName = r.FormValue("hid_userid")
+		uservalues.PassWord= r.FormValue("hid_password")
 		query.Register(uservalues)
 		h(w,r)
 	}
@@ -79,29 +115,46 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func LoginConfirm(w http.ResponseWriter, r *http.Request){
-	Userid := r.FormValue("userid")
-	fmt.Println(Userid)
-	ans := query.UserValues{}
-	ans ,err := query.CheckUser(Userid)
-	if err != nil{
-		fmt.Printf("ログインに失敗しました。")
+	uservalue := query.UserValues{
+		UserName : r.FormValue("username"),
+		PassWord : r.FormValue("password"),
 	}
-	if ans.Userid  != ""{
+	login_check_ans ,err := query.LoginCheck(uservalue)
+	fmt.Printf("req_handle login conf ans:%v\n",login_check_ans)
+	if err != nil || login_check_ans.UserId == 0{
+		fmt.Println("ログインに失敗しました。")
+	}
+	//query.Logincheck aceepted
+	if  login_check_ans.UserId != 0{
+		login_check_ans.UserName = uservalue.UserName
 		authentication := http.Cookie{
-			Name: "user_authentication",
-			Value: ans.Userid,
+			Name: "user",
+			Value: strconv.FormatInt(login_check_ans.UserId,10),//string value
 			HttpOnly: true,
 		}
 		http.SetCookie(w,&authentication)
+		if session.Tmp_session == nil{
+			session.Tmp_session = make(map[int]int)
+		}
+		login_user_id:= int(login_check_ans.UserId)
+		fmt.Printf("reqhandle login conf cookivalueint :%d\n",login_user_id)
+		session.Tmp_session[login_user_id] = login_user_id
+		fmt.Printf("reqhandle login conf cookivalueint :%v\n",session.Tmp_session[login_user_id])
 		http.Redirect(w,r,"/",302)
 	}else{
 		t, _ := template.ParseFiles("html/error.html")
-		error_massage := "UserIdまたはパスワードが異なります。"
-		t.ExecuteTemplate(w,"error.html",error_massage)
+		m := make(map[string]string)
+		m["ErrorMassage"]= "UserIdまたはパスワードが異なります。"
+		fmt.Println(m["ErrorMassage"])
+		t.ExecuteTemplate(w,"error.html",m)
 	}
 }
 func CreateProject(w http.ResponseWriter,R *http.Request){
-	t, err := template.ParseFiles("html/create_project.html")
+	t, err := template.ParseFiles(
+		"html/create_project.gohtml",
+		"html/header.gohtml",
+		"html/footer.gohtml",
+	)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -109,43 +162,72 @@ func CreateProject(w http.ResponseWriter,R *http.Request){
 		panic(err.Error())
 	}
 }
-func ConfirmProject(h http.HandlerFunc)http.HandlerFunc{
-	return func(w http.ResponseWriter,r *http.Request){
+func ConfirmProject(w http.ResponseWriter,r *http.Request){
+		s, _ := strconv.ParseInt(util.CheckCookie(w,r), 10, 64)
+		fmt.Printf("confirmproj cookie value:%v\n",s)
+		lang,_ :=  strconv.Atoi(r.FormValue("lang"))
 		thread := query.Threads{}
-		thread.Userid =	util.CheckCookie(w,r);
+		thread.UserId  = s
 		thread.Title = r.FormValue("title")
 		thread.Detail = r.FormValue("datail")
-		thread.Lang = r.FormValue("lang")
+		thread.Lang = lang
 		fmt.Println(thread)
 		query.ThreadAdd(thread)
-		h(w,r)
-	}
+		http.Redirect(w,r,"/",302)
 }
-func VueThread(w http.ResponseWriter,r *http.Request){
-	thread_userid := r.FormValue("hid_userid")
-	thread_title := r.FormValue("hid_title")
-	thread_date_created := r.FormValue("hid_date_created")
-	fmt.Println("print thread_userid: bottom")
-	fmt.Println(thread_userid)
-	thread := query.Threads{}
-	thread,_ = query.CheckThread(thread_userid,thread_title,thread_date_created);
-	t,err := template.ParseFiles("html/thread.html")
+var ThreadIdComment string
+func ThreadPage(w http.ResponseWriter,r *http.Request){
+	thread_id := r.FormValue("hid_thread_id")
+	fmt.Printf("threadpage threadid:%v\n",thread_id)
+	cookie_value_int := util.CheckCookieInt(w,r)
+	if thread_id == ""{
+		thread_id = strconv.Itoa(session.Tmp_thread_session[cookie_value_int])
+		fmt.Printf("session thread id %s\n",thread_id)
+	}else{
+		//redirect top
+	}
+	th,_ := query.CheckThread(thread_id);
+	type thread_page struct{
+		Title string
+		UserName string
+		DateCreated string
+		Lang string
+		Detail string
+		HidThreadId string
+		Comments []map[string]string
+	}
+	thread := ThreadToVueThread(th)
+	comments := query.SelectAllComment(thread_id)
+	fmt.Printf("len(comment):%v",len(comments))
+	Comments := make([]map[string]string,len(comments))
+	for i := range comments{
+		s := map[string]string{}
+		s = CommentTOVueComment(comments[i])
+		Comments[i] = s
+	}
+	fmt.Printf("comments;%v",Comments)
+	thread_page_value := thread_page{
+		thread.Title,
+		thread.UserName,
+		thread.DateCreated,
+		thread.Lang,
+		thread.Detail,
+		thread.HidThreadId,
+		Comments,
+	}
+	fmt.Printf("thread_page_value\n %v\n",thread_page_value)
+	t,err := template.ParseFiles("html/thread.gohtml","html/header.gohtml","html/comments.gohtml","html/footer.gohtml")
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.ExecuteTemplate(w, "thread.html",thread); err != nil {
+	if err := t.ExecuteTemplate(w, "thread.gohtml",thread_page_value); err != nil {
 		panic(err.Error())
 	}
 }
 
-//func Posts(w http.ResponseWriter, r *http.Request){
-	//threads := []query.Threads{}
-	//threads,_ = query.CheckAllThreads();
-	//t, err := template.ParseFiles("html/post.html")
-	//if err != nil {
-	//	panic(err.Error())
-	//}
-	//if err := t.Execute(w, threads,); err != nil {
-	//	panic(err.Error())
-	//}
-//}
+func Logout(w http.ResponseWriter, r *http.Request){
+	cookie_value,_ := strconv.Atoi(util.CheckCookie(w,r))
+	delete(session.Tmp_session,cookie_value)
+	http.Redirect(w,r,"/",302)
+
+}

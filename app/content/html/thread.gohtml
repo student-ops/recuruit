@@ -1,0 +1,26 @@
+{{template "header"}}
+  <title>{{.Title}}</title>
+  </head>
+  <body>
+    <div class="container">
+      <p>{{.Title}}</p>
+      <p>{{.UserName}}</p>
+      <p>{{.DateCreated}}</p>
+      <p>{{.Lang}}</p>
+      <p>{{.Detail}}</p>
+      <h2>comment</h2>
+      {{template "comments" .Comments}}
+      <div class="comment_form">
+        <form action="add_comment">
+          <table>
+            <input type="hidden" name="hid_thread_id" value="{{.HidThreadId}}"/>
+            <tr>
+              <td><input type="text" name="comment" /></td>
+            </tr>
+          </table>
+          <input type="submit" value="コメントを追加する" />
+        </form>
+      </div>
+    </div>
+  </body>
+{{template "footer"}}

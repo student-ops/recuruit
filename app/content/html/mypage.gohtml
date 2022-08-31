@@ -1,0 +1,17 @@
+{{template "header"}}
+<body>
+  <h1>マイページ</h1>
+</body>
+<p>ユーザー:{{.UserName}}</p>
+<p>{{.ProfileText}}</p>
+<form action="change_profile">
+  <table>
+    <tr>
+      <td>
+        <input type="text" name="user_profile" />
+      </td>
+    </tr>
+  </table>
+  <input type="submit" value="プロフィールを追加する。" />
+</form>
+{{template "footer"}}

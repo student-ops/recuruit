@@ -1,0 +1,24 @@
+.threads {
+  margin: 5% 10% 5% 40%;
+}
+
+.threads > div {
+  border-top: 0.5px solid gray;
+}
+
+#form_user {
+  display: inline;
+}
+
+.thread_user {
+  display: inline;
+}
+
+.thread_created {
+  display: inline;
+  padding: 0 10px;
+}
+
+.thread_title {
+  display: inline-block;
+} /*# sourceMappingURL=top_after.css.map */
