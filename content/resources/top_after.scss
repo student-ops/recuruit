@@ -1,21 +1,33 @@
 $cGray: gray;
+.body-main {
+  display: flex;
+  justify-content: start;
+  margin: 0 10%;
+}
+.container-sub {
+  margin: 0 15px;
+}
+.container-main {
+  margin: 40px 0;
+}
 .threads {
-  margin: 5% 10% 5% 40%;
-}
-.threads_thread {
-  border-bottom: 0.5px solid $cGray;
   border-top: 0.5px solid $cGray;
-}
-#form_user {
-  display: inline;
-}
-.thread_user {
-  display: inline;
-}
-.thread_created {
-  display: inline;
-  padding: 0 10px;
-}
-.thread_title {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  > div {
+    border-bottom: 0.5px solid $cGray;
+  }
+  #form_user {
+    display: inline;
+  }
+  .thread_user {
+    display: inline;
+  }
+  .thread_created {
+    display: inline;
+    padding: 0 10px;
+  }
+  .thread_title {
+    display: inline-block;
+  }
 }
