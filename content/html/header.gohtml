@@ -15,20 +15,49 @@
     <title>Umibata</title>
   </head>
   <body>
-  <div class="container-fluid bg-primary align-items-center sticky-top">
-    <ul class = "nav nav-fill flex-row">
-      <style>
-        #header-a{
-          font-size: 18px;
-          height:auto;
-          padding:  10px 0;
-        }
-      </style>
-      <a id = "header-a"class="col-1 text-decoration-none text-center  text-light"  href="/">home</a>
-      <a id = "header-a"class="col-2 text-decoration-none text-center  text-light"  href="/mypage">マイページ</a>
-      <a id = "header-a"class="col-1 text-decoration-none text-center text-light"  href="/create_project">募集</a>
-      <a id = "header-a"class="col-2 text-decoration-none text-center text-light"  href="/direct_massage">メッセージ</a>
-      <a id = "header-a"class="col-2 text-decoration-none text-center offset-4 text-light"   href="/logout">ログアウト</a>
-    </li>
-  </div>
+    <style>
+      #header-a {
+        font-size: 18px;
+        padding: 10px 10px;
+      }
+    #header-wrapper {
+      margin: 0 0 10px 0;
+    }
+    </style>
+    <div id = "header-wrapper" class="container-fluid bg-primary row align-items-center fixed-top">
+      <div class="row justify-content-start col">
+        <a
+          id="header-a"
+          class="col-auto text-decoration-none text-center text-light"
+          href="/mypage"
+          >Home</a
+        >
+        <a
+          id="header-a"
+          class="col-auto text-decoration-none text-center text-light"
+          href="/mypage"
+          >マイページ</a
+        >
+        <a
+          id="header-a"
+          class="col-auto text-decoration-none text-center text-light"
+          href="/create_project"
+          >募集</a
+        >
+        <a
+          id="header-a"
+          class="col-auto text-decoration-none text-center text-light"
+          href="/direct_massage"
+          >メッセージ</a
+        >
+      </div>
+      <div class="row justify-content-end col">
+        <a
+          id="header-a"
+          class="col-auto text-decoration-none text-center text-light"
+          href="/logout"
+          >ログアウト</a
+        >
+      </div>
+    </div>
 {{end}}
