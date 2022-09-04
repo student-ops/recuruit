@@ -15,9 +15,11 @@ type vue_user_profile struct{
 	ProfileText string
 }
 
+
 func MyPage(w http.ResponseWriter, r *http.Request,){
 	t, err := template.ParseFiles(
 		"html/mypage.gohtml",
+		"html/threads.gohtml",
 		"html/header.gohtml",
 		"html/footer.gohtml",
 	)
@@ -25,9 +27,21 @@ func MyPage(w http.ResponseWriter, r *http.Request,){
 		log.Fatal(err)
 	}
 	session_userid := session.Tmp_session[util.CheckCookieInt(w,r)]
-	userprofile := vue_user_profile{
+	threads := query.SelectThreadFromUser(session_userid)
+	Thread := []vue_threads{}
+	for i := range threads {		
+		th := ThreadToVueThread(threads[i]);
+		Thread = append(Thread,th)
+	}
+	type vue_user_profile_mypage struct{
+		UserName string
+		ProfileText string
+		UserPosts []vue_threads
+	}
+	userprofile := vue_user_profile_mypage{
 		UserName: query.CheckUser(int64(session_userid)),
 		ProfileText: query.SelectProfile(int64(session_userid)),
+		UserPosts: Thread,
 	}
 	t.ExecuteTemplate(w,"mypage.gohtml",userprofile)
 }

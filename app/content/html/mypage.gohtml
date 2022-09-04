@@ -1,21 +1,15 @@
 {{template "header"}}
-<body>
-  <h1>マイページ</h1>
-</body>
-<p>ユーザー:{{.UserName}}</p>
-{{with ""}}
-<form action="change_profile">
-  <table>
-    <p>{{.ProfileText}}コメントが追加されていません</p>
-    <tr>
-      <td>
-        <input type="text" name="user_profile" />
-      </td>
-    </tr>
-  </table>
-  <input type="submit" value="プロフィールコメントを追加する。" />
-</form>
-{{else}}
-  <p>プロフィール:{{.ProfileText}}</p>
-{{end}}
+<div class="container-fluid d-flex justify-content-center my-5">
+  <div class="d-flex flex-column my-5">
+    <h2>{{.UserName}}</h2>
+    <p class="p-2">{{.ProfileText}}</p>
+    <form action="change_profile">
+      <input type="text" name="user_profile" />
+      <input type="submit" value="編集" />
+    </form>
+    <div class="my-5">
+      {{ template "threads" .UserPosts}}
+    </div>
+  </div>
+</div>
 {{template "footer"}}

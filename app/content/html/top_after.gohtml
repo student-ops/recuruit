@@ -1,12 +1,20 @@
 {{template "header"}}
-<body>
-    {{template "serch"}}
-    {{with ""}}
-        <p>名前が取得されません。</p>
-    {{else}}
-        <p>{{.Userid}}さんこんにちは</p>
-    {{end}}
-    {{template "threads" .Threads}}
+    <head>
+        <link rel = "stylesheet" href = "./resources/top_after.css" >
+    </head>
+    <div class = "body-main my-5 d-flex flex-row justify-content-center">
+        <div id ="container-sub" class = "my-5 mx-2">
+        {{with ""}}
+            <p>名前が取得されません。</p>
+        {{else}}
+            <p>{{.Userid}}さんこんにちは</p>
+        {{end}}
+        {{template "serch"}}
+        </div>
+        <div id = "container-main" class= "my-5 mx-3">
+        {{template "threads" .Threads}}
+        </div>
+    </div>
 </body>
 </html>
 {{template "footer"}}

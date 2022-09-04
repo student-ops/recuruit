@@ -1,0 +1,35 @@
+.body-main {
+  display: flex;
+  justify-content: start;
+  margin: 50px 10%;
+}
+
+.container-sub {
+  margin: 0 15px;
+}
+
+.container-main {
+  margin: 40px 0;
+}
+
+.threads {
+  border-top: 0.5px solid gray;
+  display: flex;
+  flex-direction: column;
+}
+.threads > div {
+  border-bottom: 0.5px solid gray;
+}
+.threads #form_user {
+  display: inline;
+}
+.threads .thread_user {
+  display: inline;
+}
+.threads .thread_created {
+  display: inline;
+  padding: 0 10px;
+}
+.threads .thread_title {
+  display: inline-block;
+} /*# sourceMappingURL=top_after.css.map */
