@@ -9,16 +9,34 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous" />
   </head>
-  <style>
-    #wrapper {
-      margin: 10px 20%;
-    }
-  </style>
+  <style></style>
   <body>
-    <div id="wrapper" class="vstack gap-2">
-      <p>サービス説明</p>
-      <a class="btn btn-primary" href="login">ログイン</a>
-      <a class="btn btn-primary" href="create_account">新規登録</a>
+    <div id="wrapper" class="container-fluid row justify-content-center">
+      <div class="col-6 row d-grid gap-3">
+        <p>サービス説明</p>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-lg btn-block"
+          onclick="location.href= '/create_account'"
+          >新規登録</button
+        >
+        <button
+          type="button"
+          class="btn btn-primary btn-lg btn-block"
+          onclick="location.href= '/login'"
+          >ログイン</button
+        >
+      </div>
     </div>
+    <!-- <style>
+        $container-max-widths: (
+          sm: 540px,
+          md: 720px,
+          lg: 960px,
+          xl: 1140px,
+          xxl: 1320px
+        );
+      </style> -->
   </body>
 </html>
