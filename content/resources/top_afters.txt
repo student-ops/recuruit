@@ -1,7 +1,7 @@
 .body-main {
   display: flex;
   justify-content: start;
-  margin: 0 10%;
+  margin: 50px 10%;
 }
 
 .container-sub {
@@ -32,4 +32,4 @@
 }
 .threads .thread_title {
   display: inline-block;
-}/*# sourceMappingURL=top_after.css.map */
+} /*# sourceMappingURL=top_after.css.map */

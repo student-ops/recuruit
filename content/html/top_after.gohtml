@@ -2,8 +2,8 @@
     <head>
         <link rel = "stylesheet" href = "./resources/top_after.css" >
     </head>
-    <div class = "body-main">
-        <div class ="container-sub">
+    <div class = "body-main my-5 d-flex flex-row justify-content-center">
+        <div id ="container-sub" class = "my-5 mx-2">
         {{with ""}}
             <p>名前が取得されません。</p>
         {{else}}
@@ -11,7 +11,7 @@
         {{end}}
         {{template "serch"}}
         </div>
-        <div class = "container-main">
+        <div id = "container-main" class= "my-5 mx-3">
         {{template "threads" .Threads}}
         </div>
     </div>
