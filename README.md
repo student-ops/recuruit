@@ -23,10 +23,10 @@ create table
 authorization
 
 | colum        | datail                    |
-| ------------ | ------------------------- | --- |
+| ------------ | ------------------------- |
 | user id      |                           |
 | login id     | autoinclement, Primarykey |
-| user name    |                           |     |
+| user name    |                           |     
 | date created |                           |
 | date updated |                           |
 
