@@ -7,7 +7,7 @@ Costa は開発者向けの SNS です。
 
 ログイン>ID:test PW:test でゲストユーザーとしてログインできます。
 
-## 仕様技術
+## 使用技術
 
 Go docker aws postgres nginx
 
