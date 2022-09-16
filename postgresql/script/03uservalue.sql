@@ -9,6 +9,6 @@ CREATE TABLE if not exists uservalues(
 GRANT ALL PRIVILEGES ON uservalues TO recuruit;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO recuruit;
 insert into uservalues values(DEFAULT,'test',now());
-insert into uservalues values(DEFAULT,'hury kane',now());
+insert into uservalues values(DEFAULT,'harry kane',now());
 insert into uservalues values(DEFAULT,'moh salah',now());
 insert into uservalues values(DEFAULT,'reo messi',now());

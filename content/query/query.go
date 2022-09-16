@@ -52,7 +52,7 @@ func LoginCheck(uservalue UserValues)(checked_value UserValues ,err error){
 	checked_value = UserValues{}
 	hit_user_id := []int{}
 	sql_statement:= "SELECT userid FROM uservalues WHERE username = $1"
-	rows ,err := Db.Query(sql_statement,uservalue.UserName)	
+	rows ,err := Db.Query(sql_statement,uservalue.UserName)
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +76,7 @@ func LoginCheck(uservalue UserValues)(checked_value UserValues ,err error){
 			fmt.Println("query loginckechk succusesed")
 		}
 	}
-	return 
+	return
 }
 func CheckUser(userid int64)string {
 	var username string
@@ -89,7 +89,6 @@ func CheckUser(userid int64)string {
 }
 func CheckAllThreads()(threads []Threads,err error){
 	DbConection()
-	fmt.Println("arrival checkallthreads")
 	sql_statement := "SELECT * from threads ORDER BY datecreated DESC"
 	rows,err :=Db.Query(sql_statement)
 	if err != nil{

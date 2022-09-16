@@ -1,20 +1,22 @@
 package query
 
 import (
+	"fmt"
 	"testing"
 )
 func Test(t *testing.T){
-	// user := UserValues{
-	// 	UserName: "test",
-	// 	PassWord: "test1",
+	// result := SelectNewestMessage(1)
+	// edited := DeleteSameRootMessage(result)
+	// fmt.Printf("--------------\nfetched \n")
+	// for index,i := range result{
+	// 	fmt.Printf("index:%d,content:%v\n",index,i)
 	// }
-	// username := CheckUser(3)
-	// fmt.Println(username)
-	thread := Threads{
-		UserId: 1,
-		Title: "hell",
-		Lang: 2,
-		Detail: "hello",
+	// fmt.Println("--------------")
+	// for index,i := range edited{
+	// 	fmt.Printf("index:%d,content:%v\n",index,i)
+	// }
+	result := SelectIndivisualMessage(1,2)
+	for _,i := range result{
+		fmt.Println(i)
 	}
-	ThreadAdd(thread)
 }
