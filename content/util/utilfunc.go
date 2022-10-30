@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+    "test/query"
 )
 
 var commonIV = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
@@ -57,7 +58,6 @@ func CheckCookieInt(w http.ResponseWriter,r *http.Request) int{
     return cookie_value_int
 }
 
-    
 var language map[int]string
 func ConvertLang(langd int)(lang string){
     if language == nil{
@@ -67,4 +67,20 @@ func ConvertLang(langd int)(lang string){
     language[2] = "javascript"
     lang = language[langd]
     return lang
+}
+
+type ViewMessage struct{
+    NameFrom string
+    Time string
+    Content string
+}
+
+func MessageToViewMessage(input query.Message)ViewMessage{
+    var result ViewMessage
+    userid :=int64(input.IdFrom)
+    username := query.CheckUser(userid)
+    result.NameFrom = username
+    result.Time = input.Time.Format("2006-01-02 15:04:05")
+    result.Content = input.Content
+    return result
 }

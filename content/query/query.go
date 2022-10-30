@@ -79,8 +79,9 @@ func LoginCheck(uservalue UserValues)(checked_value UserValues ,err error){
 	return
 }
 func CheckUser(userid int64)string {
+	DbConection()
 	var username string
-	sql_statement := "SELECT username from uservalues WHERE userid = $1"
+	sql_statement := "SELECT username from uservalues WHERE userid = $1;"
 	if err := Db.QueryRow(sql_statement,userid).Scan(&username); err != nil{
 		fmt.Println("err occured checkuser")
 		panic(err)

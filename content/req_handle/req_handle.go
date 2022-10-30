@@ -38,7 +38,7 @@ func Top(w http.ResponseWriter, r *http.Request) {
 	if  session.Tmp_session[cookie_value_int] != 0{
 		threads,_ := query.CheckAllThreads();
 		Thread := []vue_threads{}
-		for i := range threads {		
+		for i := range threads {
 			th := ThreadToVueThread(threads[i]);
 			Thread = append(Thread,th)
 		}
@@ -46,21 +46,20 @@ func Top(w http.ResponseWriter, r *http.Request) {
 			Userid string
 			Threads  []vue_threads
 		}
-		userid_int ,_:= strconv.ParseInt(cookie_value,10,64)	
+		userid_int ,_:= strconv.ParseInt(cookie_value,10,64)
 		username := query.CheckUser(userid_int)
-		Value := top_after_value{
+		value := top_after_value{
 			Userid: username,
 			Threads: Thread,
 		}
 		t, _ := template.ParseFiles(
-		"html/top_after.gohtml",
-		"html/top_header.gohtml",
-		"html/threads.gohtml",
-		"html/serch.gohtml",
-		"html/footer.gohtml",
+			"html/top_after.gohtml",
+			"html/top_header.gohtml",
+			"html/threads.gohtml",
+			"html/serch.gohtml",
+			"html/footer.gohtml",
 		)
-		err := t.ExecuteTemplate(w,"top_after.gohtml",Value);if err != nil{
-			fmt.Println("error occured in top after")
+		err := t.ExecuteTemplate(w,"top_after.gohtml",value);if err != nil{
 			panic(err)
 		}
 	}else{

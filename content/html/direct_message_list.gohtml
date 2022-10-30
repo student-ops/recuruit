@@ -1,0 +1,10 @@
+{{template "header"}}
+<p>メッセージ一覧</p>
+{{range .MassageList}}
+    <div id = "message_thread">
+        <p>{{.NameFrom}}</p>
+        <p>{{.Time}}</p>
+        <p>{{.Content}}</p>
+    </div>
+{{end}}
+{{template "footer"}}

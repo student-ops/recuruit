@@ -28,6 +28,7 @@ func main() {
 	mux.HandleFunc("/user_page",req_handle.UserPage)
 	mux.HandleFunc("/logout",req_handle.Logout)
 	mux.HandleFunc("/change_profile",req_handle.ChangeProfile)
+	mux.HandleFunc("/direct_message",req_handle.Message)
 	// サーバーの定義と呼び出し
 	server := &http.Server{
 		Addr: ":9000",
