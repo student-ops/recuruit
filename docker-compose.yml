@@ -1,29 +1,29 @@
 version: "3"
 
 services:
-  db:
-    image: postgres:14
-    container_name: recuruit-postgres
-    ports:
-      - 5432:5432
-    volumes:
-      - db-store:/var/lib/postgresql/data
-      - ./postgresql/script:/docker-entrypoint-initdb.d
-    environment:
-      - POSTGRES_PASSWORD=passward
+    db:
+        image: postgres:14
+        container_name: recuruit-postgres
+        ports:
+            - 5432:5432
+        volumes:
+            - db-store:/var/lib/postgresql/data
+            - ./postgresql/script:/docker-entrypoint-initdb.d
+        environment:
+            - POSTGRES_PASSWORD=passward
 
-  nginx:
-    container_name: nginx
-    build: ./nginx
-    ports:
-      - 8080:8080
-    depends_on:
-      - app
+    nginx:
+        container_name: recuruit-nginx
+        build: ./nginx
+        ports:
+            - 8080:8080
+        depends_on:
+            - app
 
-  app:
-    build: ./app
-    ports:
-      - 9000:9000
+    app:
+        build: ./app
+        ports:
+            - 9000:9000
 
 volumes:
-  db-store:
+    db-store:
