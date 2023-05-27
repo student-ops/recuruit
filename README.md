@@ -1,52 +1,55 @@
-## Difference btween master
+## 作成　ファイル
+html
+ - create :アカウント作成
+ - login :ログイン
+ - top : トップページ(ログイン前)
+ - top_after : トップページ(ログイン後)
 
-    potgres dockercompose の追加。統合docker composeを削除　app/queryのDB接続設定を変更。
 
-## Postgres DB
 
-user values
+[top]
+Ι
+Ι―[login(データ引き出し)]――[top_after]
+Ι     ↑　　　　　			Ι
+Ι―[create(データ挿入)]　　　　　 	Ι―[my_page(データ引き出し)]
+　　　　　　　　　　　　　　　　	Ι
+						Ι―[recuruit(データ引き出し)]
+						Ι
+						Ι―[create_recuruit(データ挿入)]
+
+### DB
+
+user table
 |colum | datail |
 | ----- | -----|
-|user id | bigint auto incremnt primarykey|
-|user name | varchar(50)|
+|user id | varchar*50)|
+|pass word | varchar*50)|
 |date created |date time |
-|-|-|
+|date updated| date time|
+|date deleted | date time|
+mysql
+create table 
 
-user profile
+authorization
 
-| colum           | type               |
-| --------------- | ------------------ |
-| userid          | bigint primary key |
-| back end skill  | int (bit)          |
-| front end skill | int (bit)          |
-| infla skill     | int(bit)           |
-| message         | varcahr(200)       |
-
-personal
 |colum | datail |
 | ----- | -----|
-|user id | bit int primarykey|
-|pass word| string //plan bit//|
-| mail address//paln | string|
+|user id | |
+|login id | autoinclement, Primarykey|
+|user name| ||
+|date created | |
+|date updated| |
 
-thread
+
+post
 |colum|type|
-|--|--|
-|threadid| BIGSERIAL PRIMARY KEY|
-|title|varchar(50) |
-|datacreated| varchar(50)|
-|user id|int|
+|- |-|
+|title|varchar(50) primary|
+|datacreated| varchar(50) primary|
 |lang|int|
-|detail |varchar(600)|
+|detail|varchar(300)|
 
-commnet
-|colum|type|
-|--|-|
-|userid | -|
-|thread name |varchar(50) primary key|
-|thread created|varchar(50) primary key|
-|id|varchar (50) primary key|
-|date added|date time|
-|content| varchar (400)|
+
+
 
 memo
